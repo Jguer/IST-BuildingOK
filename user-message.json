@@ -1,0 +1,30 @@
+// Login /position
+{
+  "istID": "81331",
+  "latitude": "33.21231",
+  "longitude": "81.4214"
+}
+
+// Send Message /message
+{
+  "istID": "81331",
+  "message": "Taguspark ++",
+  "range": "20.0"
+}
+
+// Nearby Location /nearby/location
+{
+  "istID": "81331",
+  "building": "Central"
+}
+
+// Nearby Location /nearby/building
+{
+  "istID": "81331",
+  "range": "20.0"
+}
+
+// Logout /logout
+{
+  "istID": "81331"
+}
