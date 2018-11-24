@@ -3,23 +3,19 @@ package main
 import (
 	"net/http"
 
-	"github.com/foolin/echo-template"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/gin-gonic/gin"
 )
 
-func index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index.html", echo.Map{"title": "Page file title!!"})
+func index(c *gin.Context) {
+	c.HTML(http.StatusOK, "index.html", gin.H{
+		"title": "Main website",
+	})
 }
 
 func main() {
-	e := echo.New()
+	r := gin.Default()
+	r.LoadHTMLGlob("views/*")
 
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Renderer = echotemplate.Default()
-
-	e.GET("/", index)
-
-	e.Logger.Fatal(e.Start(":9090"))
+	r.GET("/", index)
+	r.Run(":9090") // listen and serve on 0.0.0.0:8080
 }
