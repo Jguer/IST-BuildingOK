@@ -16,9 +16,47 @@
 </head>
 
 <body>
-  <div class="container">
-    <h2>Login</h2>
-    <div id="mymap" style="height: 400px"></div>
+  <nav class="navbar navbar-default navbar-pf" role="navigation">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">
+        <img src="/assets/img/brand.svg" alt="Builing... OK" />
+      </a>
+    </div>
+    <div class="collapse navbar-collapse navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-primary">
+        <li>
+          <a class="active" href="#0">Home</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container-fluid container-cards-pf">
+    <div class="row row-cards-pf">
+      <div class="col-xs-12">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Login
+          </h2>
+          <div class="card-pf-body">
+            <div id="mymap" style="height: 400px"></div>
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a href="#" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Add New Cluster
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <script type="text/javascript">
     var map = L.map('mymap').setView([38.736829, -9.138246], 17);
@@ -35,7 +73,7 @@
     map.on('click', onMapClick);
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
 </body>
