@@ -17,29 +17,32 @@
 
 <body>
   <nav class="navbar navbar-default navbar-pf" role="navigation">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/">
-        <img src="/assets/img/brand.svg" alt="Builing... OK" />
-      </a>
-    </div>
-    <div class="collapse navbar-collapse navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-primary">
-        <li>
-          <a class="active" href="#0">Home</a>
-        </li>
-      </ul>
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">
+          <img src="/assets/img/brand.svg" alt="Builing... OK" />
+        </a>
+      </div>
+      <div class="collapse navbar-collapse navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-primary">
+          <li>
+            <a class="active" href="#0">Home</a>
+          </li>
+        </ul>
+      </div>
+
     </div>
   </nav>
 
   <div class="container-fluid container-cards-pf">
     <div class="row row-cards-pf">
-      <div class="col-xs-12">
+      <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Login
@@ -48,15 +51,120 @@
             <div id="mymap" style="height: 400px"></div>
           </div>
           <div class="card-pf-footer">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Latitude:</label>
+                <div class="col-sm-10">
+                  <input id="location-lat" class="form-control" value="Select your location on the map" type="text" disabled="disabled" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Longitude:</label>
+                <div class="col-sm-10">
+                  <input id="location-lng" class="form-control" value="Select your location on the map" type="text" disabled="disabled" />
+                </div>
+              </div>
+            </form>
             <p>
-              <a href="#" class="card-pf-link-with-icon">
-                <span class="pficon pficon-add-circle-o"></span>Add New Cluster
+              <a id="submit-location" href="#" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Submit Location
               </a>
             </p>
           </div>
         </div>
       </div>
-    </div>
+      <div class="col-md-6">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Send Message
+          </h2>
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
+                <div class="col-sm-10">
+                  <input class="bootstrap-touchspin" value="0" id="range" type="text" name="bootstrap-touchspin-empty">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Message:</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="message"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a id="submit-text" href="#" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Send Text
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div> <!-- row -->
+    <div class="row row-cards-pf">
+      <div class="col-md-4">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Set Receive Range
+          </h2>
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
+                <div class="col-sm-10">
+                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a id="submit-range" href="#" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Define Range
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Nearby Users
+          </h2>
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
+                <div class="col-sm-10">
+                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            New Messages
+          </h2>
+          <div class="card-pf-body">
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a id="submit-refresh" href="#" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Refresh
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- row -->
+
   </div>
   <script type="text/javascript">
     var map = L.map('mymap').setView([38.736829, -9.138246], 17);
@@ -67,7 +175,8 @@
     }).addTo(map);
 
     function onMapClick(e) {
-      alert("You clicked the map at " + e.latlng);
+      $("#location-lat").val(e.latlng.lat)
+      $("#location-lng").val(e.latlng.lng)
     }
 
     map.on('click', onMapClick);
@@ -76,6 +185,31 @@
   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+  <script src="/assets/bootstrap-touchspin/dist/jquery.bootstrap-touchspin.min.js"></script>
+  <script src="/assets/jquery-match-height/dist/jquery.matchHeight-min.js"></script>
+  <script>
+    $(document).ready(function() {
+      // matchHeight the contents of each .card-pf and then the .card-pf itself
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+
+    });
+    $("#range").TouchSpin({
+      min: 0,
+      max: 20,
+      stepinterval: 1,
+      maxboostedstep: 10,
+    });
+
+    $("#receive-range").TouchSpin({
+      min: 0,
+      max: 20,
+      stepinterval: 1,
+      maxboostedstep: 10,
+    });
+  </script>
 </body>
 
 </html>
