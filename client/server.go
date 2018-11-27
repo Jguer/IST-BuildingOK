@@ -13,9 +13,9 @@ func index(c *gin.Context) {
 }
 
 func main() {
+	//gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	r.LoadHTMLGlob("views/*")
-	r.Static("/assets", "./node_modules")
 
 	r.GET("/", index)
 	r.Run(":9090") // listen and serve on 0.0.0.0:8080

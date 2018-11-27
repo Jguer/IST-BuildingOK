@@ -29,18 +29,61 @@
           <img src="/assets/img/brand.svg" alt="Builing... OK" />
         </a>
       </div>
-      <div class="collapse navbar-collapse navbar-collapse-1">
-        <ul class="nav navbar-nav navbar-primary">
-          <li>
-            <a class="active" href="#0">Home</a>
-          </li>
-        </ul>
-      </div>
-
     </div>
   </nav>
 
   <div class="container-fluid container-cards-pf">
+    <div class="row row-cards-pf">
+      <div class="col-md-6">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Set Server
+          </h2>
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
+                <div class="col-sm-10">
+                  <input value="127.0.0.1" id="set-server" type="text">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a id="submit-server" class="card-pf-link-with-icon">
+                <span class="fa fa-check"></span>Define server
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card-pf">
+          <h2 class="card-pf-title">
+            Set Receive Range
+          </h2>
+          <div class="card-pf-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
+                <div class="col-sm-10">
+                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="card-pf-footer">
+            <p>
+              <a id="submit-range" class="card-pf-link-with-icon">
+                <span class="pficon pficon-add-circle-o"></span>Define Range
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="row row-cards-pf">
       <div class="col-md-6">
         <div class="card-pf">
@@ -66,7 +109,7 @@
               </div>
             </form>
             <p>
-              <a id="submit-location" href="#" class="card-pf-link-with-icon">
+              <a id="submit-location" class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Submit Location
               </a>
             </p>
@@ -96,7 +139,7 @@
           </div>
           <div class="card-pf-footer">
             <p>
-              <a id="submit-text" href="#" class="card-pf-link-with-icon">
+              <a id="submit-text" class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Send Text
               </a>
             </p>
@@ -105,31 +148,7 @@
       </div>
     </div> <!-- row -->
     <div class="row row-cards-pf">
-      <div class="col-md-4">
-        <div class="card-pf">
-          <h2 class="card-pf-title">
-            Set Receive Range
-          </h2>
-          <div class="card-pf-body">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
-                <div class="col-sm-10">
-                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="card-pf-footer">
-            <p>
-              <a id="submit-range" href="#" class="card-pf-link-with-icon">
-                <span class="pficon pficon-add-circle-o"></span>Define Range
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Nearby Users
@@ -139,14 +158,14 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
                 <div class="col-sm-10">
-                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
+                  <input class="bootstrap-touchspin" value="0" id="nearby-range" type="text" name="bootstrap-touchspin-empty">
                 </div>
               </div>
             </form>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
             New Messages
@@ -155,7 +174,7 @@
           </div>
           <div class="card-pf-footer">
             <p>
-              <a id="submit-refresh" href="#" class="card-pf-link-with-icon">
+              <a id="submit-refresh" class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Refresh
               </a>
             </p>
@@ -166,6 +185,11 @@
     </div> <!-- row -->
 
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"></script>
   <script type="text/javascript">
     var map = L.map('mymap').setView([38.736829, -9.138246], 17);
 
@@ -180,22 +204,21 @@
     }
 
     map.on('click', onMapClick);
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"></script>
-  <script>
-    $(document).ready(function() {
-      // matchHeight the contents of each .card-pf and then the .card-pf itself
-      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+    $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+    $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
-    });
+    var server = "127.0.0.1";
+    // matchHeight the contents of each .card-pf and then the .card-pf itself
+
     $("#range").TouchSpin({
+      min: 0,
+      max: 20,
+      stepinterval: 1,
+      maxboostedstep: 10,
+    });
+    $("#nearby-range").TouchSpin({
       min: 0,
       max: 20,
       stepinterval: 1,
@@ -208,6 +231,44 @@
       stepinterval: 1,
       maxboostedstep: 10,
     });
+
+    $("#submit-server").on("click", function() {
+      server = $('#set-server').text();
+    });
+
+    $("#submit-range").on("click", function() {
+      var range = $("#receive-range").val();
+      $.ajax({
+        url: server + "/nearby/range",
+        data: JSON.stringify({
+          'range': range
+        }),
+        contentType: 'application/json',
+        type: 'POST'
+      }).done(function(data) {
+        if (console && console.log) {
+          console.log("Sample of data:", data.slice(0, 100));
+        }
+      });
+    });
+
+    $("#submit-location").on("click", function() {
+      var lat = $("#location-lat").val();
+      var lng = $("#location-lng").val();
+      console.log(lat + lng);
+    });
+
+    $("#submit-text").on("click", function() {
+      var range = $("#range").val();
+      var text = $("#message").text();
+      console.log(range + text);
+    });
+
+    $("#nearby-range").on('change', function() {
+      var range = $(this).val();
+    });
+
+    $("#submit-refresh").on("click", function() {});
   </script>
 </body>
 
