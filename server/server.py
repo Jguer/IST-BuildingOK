@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import jsonify
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 
@@ -8,13 +7,10 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World!'
 
-@app.route('/json1')
-def ret_jsontxt():
-    return str( {"aaa":12, "bbb": ["bbb", 12, 12] })
 
 @app.route('/json2')
 def ret_jsonjson():
-    return jsonify( {"aaa":12, "bbb": ["bbb", 12, 12] })
+    return jsonify({"aaa": 12, "bbb": ["bbb", 12, 12]})
 
 
 if __name__ == '__main__':
