@@ -58,30 +58,6 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card-pf">
-          <h2 class="card-pf-title">
-            Set Receive Range
-          </h2>
-          <div class="card-pf-body">
-            <form class="form-horizontal">
-              <div class="form-group">
-                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
-                <div class="col-sm-10">
-                  <input class="bootstrap-touchspin" value="0" id="receive-range" type="text" name="bootstrap-touchspin-empty">
-                </div>
-              </div>
-            </form>
-          </div>
-          <div class="card-pf-footer">
-            <p>
-              <a id="submit-range" class="card-pf-link-with-icon">
-                <span class="pficon pficon-add-circle-o"></span>Define Range
-              </a>
-            </p>
-          </div>
-        </div>
-      </div>
     </div>
 
     <div class="row row-cards-pf">
@@ -256,11 +232,38 @@
       var lat = $("#location-lat").val();
       var lng = $("#location-lng").val();
       console.log(lat + lng);
+      $.ajax({
+        url: server + "/nearby/range",
+        data: JSON.stringify({
+          'lat': lat,
+          'lng': lng
+        }),
+        contentType: 'application/json',
+        type: 'POST'
+      }).done(function(data) {
+        if (console && console.log) {
+          console.log("Sample of data:", data.slice(0, 100));
+        }
+      });
     });
 
     $("#submit-text").on("click", function() {
       var range = $("#range").val();
       var text = $("#message").text();
+
+      $.ajax({
+        url: server + "/nearby/range",
+        data: JSON.stringify({
+          'range': range,
+          'text': lng
+        }),
+        contentType: 'application/json',
+        type: 'POST'
+      }).done(function(data) {
+        if (console && console.log) {
+          console.log("Sample of data:", data.slice(0, 100));
+        }
+      });
       console.log(range + text);
     });
 
