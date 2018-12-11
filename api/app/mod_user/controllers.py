@@ -2,16 +2,18 @@ import json
 
 from flask import Blueprint, Flask, jsonify, request
 from sqlalchemy import update
-import datetime
+import datetime, math
 
-from app import db
+from app import db, utils
 import app.models as models
 
 mod_user = Blueprint("user", __name__, url_prefix="/user")
 
 def update_coord(cont, user_id):
-    updt = update(models.User).where(models.User.ist_ID==user_id).
-    values(cur_pos_lat = cont['lat'],cur_pos_long = cont['long'])
+    updt_user = db.session.query(User).filter_by(ist_ID = user_id)
+    updt_user.cur_pos_lat = cont['lat']
+    updt_user.cur_pos_long = cont['long']
+    list_buildings = db.session.query(Building).filter(utils.dist(updt_user.cur_pos_lat, Building.cur_pos_lat, updt_user.cur_pos_long, Building.cur_pos_long) < utils.default_range)
     return
 
 def post_message(cont, user_id):
@@ -21,9 +23,8 @@ def post_message(cont, user_id):
     return
 
 def get_users_in_range(user_id, range):
-    sending_user = models.User.query.filter_by(ist_ID = user_id)
-    range_in_dd = range/1.1123e5
-    list_in_range = models.User.query.filter(sqrt((User.cur_pos_lat-sending_user.cur_pos_lat)^2+(User.cur_pos_long-sending_user.cur_pos_long)^2)<range_in_dd)
+    sending_user = db.session.query(User).filter_by(ist_ID = user_id)
+    list_in_range = db.session.query(User).filter(utils.dist(User.cur_pos_lat, sending_user.cur_pos_lat, User.cur_pos_long, sending_user.cur_pos_long) < range)
     return list_in_range
 
 @mod_user.route(
