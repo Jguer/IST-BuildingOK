@@ -3,11 +3,7 @@ import json
 from flask import Blueprint, Flask, jsonify, request
 
 from app import db
-import app.models as models
 import datetime
-
-from sqlalchemy import (Column, Integer, String, Boolean, ForeignKey, DateTime,
-                        Sequence, Float)
 
 mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -15,8 +11,6 @@ mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 @mod_admin.route("/online", methods=["GET"])
 def check_online_users():
     current_time = datetime.datetime.now()
-    online_table = db.session.query(models.User).filter(
-        models.User.lastseen > current_time - datetime.timedelta(minutes=10))
     if not online_table:
         return ("", 204)
     return json.dumps(jsonify(online_table)), 200, {
@@ -27,7 +21,8 @@ def check_online_users():
 @mod_admin.route("/building", methods=["GET", "POST"])
 def buildings():
     if request.method == "GET":
-        buildings_table = db.session.query(models.Building)
+        buildings_table = db.Building
+
         return (
             json.dumps(jsonify(buildings_table)),
             200,
@@ -67,13 +62,11 @@ def users_inside(build_id):
 
 @mod_admin.route("/users", methods=["GET"])
 def show_users():
-    all_users_table = db.session.query(models.User).all()
+    all_users_table = db.User.find({})
     print(all_users_table)
     if not all_users_table:
         return ("", 204)
-    return json.dumps(jsonify(all_users_table)), 200, {
-        "ContentType": "application/json"
-    }
+    return jsonify([ob.__dict__ for ob in all_users_table])
 
 
 @mod_admin.route("/log/user/<usr_id>", methods=["GET"])
