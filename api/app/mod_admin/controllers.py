@@ -8,13 +8,14 @@ import datetime
 
 from sqlalchemy import (Column, Integer, String, Boolean, ForeignKey, DateTime,
                         Sequence, Float)
+
 mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
 
 @mod_admin.route("/online", methods=["GET"])
 def check_online_users():
     current_time = datetime.datetime.now()
-    online_table = db.query(models.User).filter(
+    online_table = db.session.query(models.User).filter(
         models.User.lastseen > current_time - datetime.timedelta(minutes=10))
     if not online_table:
         return ("", 204)
@@ -26,7 +27,7 @@ def check_online_users():
 @mod_admin.route("/building", methods=["GET", "POST"])
 def buildings():
     if request.method == "GET":
-        buildings_table = db.query(models.Building)
+        buildings_table = db.session.query(models.Building)
         return (
             json.dumps(jsonify(buildings_table)),
             200,
@@ -54,7 +55,9 @@ def buildings():
 
 @mod_admin.route("/users/<build_id>", methods=["GET"])
 def users_inside(build_id):
-    inside_table = get_users_online()
+    current_time = datetime.datetime.now()
+    inside_table = db.session.query(models.User).filter(
+        models.User.lastseen > current_time - datetime.timedelta(minutes=10))
     if not inside_table:
         return ("", 204)
     return json.dumps(jsonify(inside_table)), 200, {
@@ -64,10 +67,11 @@ def users_inside(build_id):
 
 @mod_admin.route("/users", methods=["GET"])
 def show_users():
-    online_table = get_users_online()
-    if not online_table:
+    all_users_table = db.session.query(models.User).all()
+    print(all_users_table)
+    if not all_users_table:
         return ("", 204)
-    return json.dumps(jsonify(online_table)), 200, {
+    return json.dumps(jsonify(all_users_table)), 200, {
         "ContentType": "application/json"
     }
 

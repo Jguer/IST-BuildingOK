@@ -3,6 +3,7 @@ import datetime
 
 
 class UserMessage(db.Model):
+    __tablename__ = 'user_messages'
     from_istID = db.Column(db.String(9), primary_key=True)
     sentstamp = db.Column(
         db.DateTime, primary_key=True)  # timestamp given by server
@@ -16,7 +17,6 @@ class User(db.Model):
     ist_ID = db.Column(db.String(9), primary_key=True)
     cur_pos_lat = db.Column(db.Float)
     cur_pos_long = db.Column(db.Float)
-    building_ID = db.Column(db.BigInteger)
     last_seen = db.Column(db.DateTime, default=datetime.datetime.now)
 
     # inBuilding query: SELECT buildingID from Building B, User U where
@@ -28,6 +28,7 @@ class User(db.Model):
 
 
 class Building(db.Model):
+    __tablename__ = 'buildings'
     building_ID = db.Column(db.BigInteger, primary_key=True)
     location_lat = db.Column(db.Float)
     location_long = db.Column(db.Float)
@@ -35,6 +36,7 @@ class Building(db.Model):
 
 
 class Stay(db.Model):
+    __tablename__ = 'stays'
     ist_ID = db.Column(db.String(9), primary_key=True)
     arrival = db.Column(db.DateTime, primary_key=True)
     departure = db.Column(db.DateTime)
@@ -42,6 +44,7 @@ class Stay(db.Model):
 
 
 class BotMessage(db.Model):
+    __tablename__ = 'bot_messages'
     to_buildingID = db.Column(db.BigInteger, primary_key=True)
     sentstamp = db.Column(db.DateTime, primary_key=True)
     content = db.Column(db.Text)
