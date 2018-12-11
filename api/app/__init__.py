@@ -1,8 +1,7 @@
 # Import flask and template operators
 from flask import Flask
 
-# Import SQLAlchemy
-from flask_sqlalchemy import SQLAlchemy
+from pymongo import MongoClient
 
 # Define the WSGI application object
 app = Flask(__name__)
@@ -12,8 +11,11 @@ app.config.from_object("app.config")
 
 # Define the database object which is imported
 # by modules and controllers
+client = MongoClient(
+    'mongodb://api:MsfqxRh80C9nDP9j@buildingok-shard-00-00-x0spo.azure.mongodb.net:27017/'
+)
 
-db = SQLAlchemy(app)
+db = client['test-database']
 
 
 # Sample HTTP error handling
