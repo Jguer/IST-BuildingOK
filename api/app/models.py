@@ -1,20 +1,5 @@
 from app import db
-
-
-class User(db.Model):
-    # Columns
-    ist_ID = db.Column(db.String(9), primary_key=True)
-    cur_pos_lat = db.Column(db.Float)
-    cur_pos_long = db.Column(db.Float)
-    last_seen = db.Column(db.DateTime)
-    # inBuilding query: SELECT buildingID from Building B, User U where sqrt((U.cur_pos_lat - B.location_lat)^2 + (U.cur_pos_lat - B.location_lat)^2) < radius
-
-
-class Building(db.Model):
-    building_ID = db.Column(db.BigInteger, primary_key=True)
-    location_lat = db.Column(db.Float)
-    location_long = db.Column(db.Float)
-    name = db.Column(db.String(128))
+import datetime
 
 
 class UserMessage(db.Model):
@@ -31,7 +16,8 @@ class User(db.Model):
     ist_ID = db.Column(db.String(9), primary_key=True)
     cur_pos_lat = db.Column(db.Float)
     cur_pos_long = db.Column(db.Float)
-    last_seen = db.Column(db.DateTime)
+    building_ID = db.Column(db.BigInteger)
+    last_seen = db.Column(db.DateTime, default=datetime.datetime.now)
 
     # inBuilding query: SELECT buildingID from Building B, User U where
     # sqrt((U.cur_pos_lat - B.location_lat)^2
