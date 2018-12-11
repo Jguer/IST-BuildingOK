@@ -19,18 +19,26 @@ class Building(db.Model):
 
 class UserMessage(db.Model):
     from_istID = db.Column(db.String(9), primary_key=True)
-    sentstamp = db.Column(db.DateTime, primary_key=True)  # timestamp given by server
+    sentstamp = db.Column(
+        db.DateTime, primary_key=True)  # timestamp given by server
     radius = db.Column(db.Float)
     content = db.Column(db.Text)
 
 
 class User(db.Model):
+    __tablename__ = 'users'
     # Columns
     ist_ID = db.Column(db.String(9), primary_key=True)
     cur_pos_lat = db.Column(db.Float)
     cur_pos_long = db.Column(db.Float)
     last_seen = db.Column(db.DateTime)
-    # inBuilding query: SELECT buildingID from Building B, User U where sqrt((U.cur_pos_lat - B.location_lat)^2 + (U.cur_pos_lat - B.location_lat)^2) < radius
+
+    # inBuilding query: SELECT buildingID from Building B, User U where
+    # sqrt((U.cur_pos_lat - B.location_lat)^2
+    # + (U.cur_pos_lat - B.location_lat)^2) < radius
+
+    def __repr__(self):
+        return '<User %r>' % (self.ist_ID)
 
 
 class Building(db.Model):

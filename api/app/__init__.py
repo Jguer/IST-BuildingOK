@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 # Configurations
-# app.config.from_object("config")
+app.config.from_object("app.config")
 
 # Define the database object which is imported
 # by modules and controllers
