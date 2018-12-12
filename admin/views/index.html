@@ -280,14 +280,13 @@
       var lng = $("#location-lng").val();
       $.ajax({
         url: server + "/admin/building",
-        data: JSON.stringify({
+        data: JSON.stringify([{
           'name': name,
           'lat': lat,
           'lng': lng
-        }),
-        datatype: 'jsonp',
-        crossDomain: true,
+        }]),
         contentType: 'application/json',
+        crossDomain: true,
         type: 'POST'
       }).done(function(data) {
         if (console && console.log) {
