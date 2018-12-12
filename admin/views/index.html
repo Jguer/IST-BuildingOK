@@ -48,7 +48,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
                 <div class="col-sm-10">
-                  <input value="127.0.0.1" id="set-server" type="text">
+                  <input value="http://127.0.0.1" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -230,7 +230,7 @@
     $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
     $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
-    var server = "127.0.0.1";
+    var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
 
     $("#range").TouchSpin({
@@ -264,6 +264,7 @@
         data: JSON.stringify({
           'range': range
         }),
+        crossDomain: true,
         contentType: 'application/json',
         type: 'POST'
       }).done(function(data) {
@@ -274,9 +275,25 @@
     });
 
     $("#submit-location").on("click", function() {
+      var name = $("#location-name").val();
       var lat = $("#location-lat").val();
       var lng = $("#location-lng").val();
-      console.log(lat + lng);
+      $.ajax({
+        url: server + "/admin/building",
+        data: JSON.stringify({
+          'name': name,
+          'lat': lat,
+          'lng': lng
+        }),
+        datatype: 'jsonp',
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'POST'
+      }).done(function(data) {
+        if (console && console.log) {
+          console.log(data);
+        }
+      });
     });
 
     $("#submit-text").on("click", function() {

@@ -21,31 +21,22 @@ def check_online_users():
 @mod_admin.route("/building", methods=["GET", "POST"])
 def buildings():
     if request.method == "GET":
-        buildings_table = db.Building
-
-        return (
-            json.dumps(jsonify(buildings_table)),
-            200,
-            {
-                "ContentType": "application/json"
-            },
-        )
-
-    content = request.get_json()
-    for i in content:
-        b = models.Building(
-            building_ID=id,
-            location_lat=i["lat"],
-            location_long=i["lng"],
-            name=i["name"])
-        print("building created", b)
-        db.session.add(b)
-    db.session.commit()
-    return json.dumps({
-        "success": True
-    }), 200, {
-        "ContentType": "application/json"
-    }
+        all_users_table = db.Building.find({})
+        print(all_users_table)
+        return jsonify([ob.__dict__ for ob in all_users_table])
+    elif request.method == "POST":
+        content = request.get_json()
+        for i in content:
+            db.Building.insert_one({
+                'location_lat': i["lat"],
+                'location_long': i["lat"],
+                'name': i["name"]
+            })
+        return json.dumps({
+            "success": True
+        }), 200, {
+            "ContentType": "application/json"
+        }
 
 
 @mod_admin.route("/users/<build_id>", methods=["GET"])
@@ -64,8 +55,6 @@ def users_inside(build_id):
 def show_users():
     all_users_table = db.User.find({})
     print(all_users_table)
-    if not all_users_table:
-        return ("", 204)
     return jsonify([ob.__dict__ for ob in all_users_table])
 
 
