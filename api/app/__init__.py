@@ -1,5 +1,5 @@
 # Import flask and template operators
-from flask import Flask
+from flask import request, current_app, Flask
 
 from pymongo import MongoClient
 
@@ -24,6 +24,17 @@ def not_found(error):
     return ("Not at home", 404)
 
 
+def add_cors_headers(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    if request.method == 'OPTIONS':
+        response.headers[
+            'Access-Control-Allow-Methods'] = 'DELETE, GET, POST, PUT'
+        headers = request.headers.get('Access-Control-Request-Headers')
+        if headers:
+            response.headers['Access-Control-Allow-Headers'] = headers
+    return response
+
+
 #from app.mod_user.controllers import mod_user as user_module
 from app.mod_admin.controllers import mod_admin as admin_module
 from app.mod_bot.controllers import mod_bot as bot_module
@@ -33,3 +44,5 @@ from app.mod_bot.controllers import mod_bot as bot_module
 #app.register_blueprint(user_module)
 app.register_blueprint(admin_module)
 app.register_blueprint(bot_module)
+
+app.after_request(add_cors_headers)
