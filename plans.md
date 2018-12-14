@@ -18,8 +18,13 @@
 - content (text)
 - to_istID (string)
 - sent_from (long int)
+- sent_to (long int)
 
 ### Activity (istID - string, arrival - datetime)
 
 - buildingID - long int
 - departure - datetime
+
+### Bot (bot_ID - int)
+
+- buildingID - long int
