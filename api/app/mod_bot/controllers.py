@@ -8,12 +8,20 @@ mod_bot = Blueprint("bot", __name__, url_prefix="/bot")
 
 @mod_bot.route("/register", methods=["POST"])
 def register_bot():
-    pass
+    content = request.get_json()
+    db.Bot.insert_one({'bot_ID':content['id'], 'building_ID': content['building_ID']})
+    return ("", 200)
 
-def check_online_users():
-    online_table = db.User.find({'last_seen': {'$gt': datetime.utcnow() - timedelta(minutes = 10)}})
-    if not online_table:
-        return ("", 204)
-    return json.dumps(jsonify(online_table)), 200, {
-        "ContentType": "application/json"
-    }
+@mod_bot.route("/<bot_id>/message", methods=["POST"])
+def send_message(bot_id):
+    content = request.get_json()
+    build = db.Bot.find_one({'bot_ID': bot_id})['building_ID']
+    build_pos = db.Building.find_one({'building_ID': build_pos})['position']
+    list_in_range = db.User.find({'cur_pos': {'$near': {'$geometry': {type: 'Point', coordinates: build_pos}, '$maxDistance': range}},
+    'last_seen': {'$gt': datetime.utcnow() - timedelta(minutes = 10)})
+    new_messages = [{'from_istID': bot_id, 'sentstamp': datetime.utcnow(), 'content': content['content'], 'sent_from': build,
+    'to_istID': x.__dict__['ist_ID'], 'sent_to': user_building(x.__dict__['cur_pos'])['building_ID']} for x in list_in_range]
+    result = db.Message.insert_many(new_messages)
+    if (len(result.inserted_ids) == len(new_messages)):
+        return jsonify({'result': 'True'}), 200
+    return jsonify({'result': 'False'}), 200
