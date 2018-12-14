@@ -8,6 +8,7 @@ import datetime
 mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
 
+
 @mod_admin.route("/online", methods=["GET"])
 def check_online_users():
     return actions.online_users()
@@ -28,7 +29,7 @@ def users_inside(build_id):
         models.User.lastseen > current_time - datetime.timedelta(minutes=10))
     if not inside_table:
         return ("", 204)
-    return json.dumps(jsonify(inside_table)), 200, {
+    return json.dumps(jsonify([ob.__dict__ for ob in inside_table])), 200, {
         "ContentType": "application/json"
     }
 

@@ -1,18 +1,25 @@
 # DB
 
-### User (istID)
+### User (istID - string)
 
-- Current Position
-- History of Location (timestamp in-out and building ID)
+- Current Position (gson point)
+- name (string)
+- last seen (datetime)
 
-### Building (Building ID)
+### Building (building_ID - long int)
 
-- Name
-- Location
-- Users inside
+- Name (string)
+- Location (gson point)
 
-### Messages (Message ID)
+### Message (message_ID - int)
 
-- From ISTid
-- To Building
-- Timestamp
+- from_istID (string)
+- sentstamp (datetime)
+- content (text)
+- to_istID (string)
+- sent_from (long int)
+
+### Activity (istID - string, arrival - datetime)
+
+- buildingID - long int
+- departure - datetime

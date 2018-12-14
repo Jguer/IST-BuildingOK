@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from app import db
+from app import db, utils
 import datetime
 
 
@@ -8,9 +8,9 @@ def building_put():
     to_add = []
     for i in content:
         to_add.append({
-            'location_lat': i["lat"],
-            'location_long': i["lng"],
-            'name': i["name"]
+            'id' : i['id'],
+            'name': i['name'],
+            'position': i['position']
         })
     print(to_add)
 
@@ -27,12 +27,14 @@ def building_list():
 
 
 def online_users():
-    compare = datetime.datetime.now() - datetime.timedelta(minutes=10)
-    online_table = db.User.find({"last_seen": {"$lt": compare}})
+    compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+    online_table = db.User.find({'last_seen': {'$gt': compare}})
     return jsonify([ob.__dict__ for ob in online_table])
 
 
 def users_inside(build_id):
-    compare = datetime.datetime.now() - datetime.timedelta(minutes=10)
-    online_table = db.User.find({"last_seen": {"$lt": compare}})
+    compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+    build_pos = db.Building.find_one({'id': build_id})['position']
+    online_table = db.User.find({'last_seen': {'$gt': compare}, cur_pos: {$near: {$geometry: {type: 'Point', coordinates: build_pos},
+     $maxDistance: utils.default_range}}})
     return jsonify([ob.__dict__ for ob in online_table])
