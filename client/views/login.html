@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Client App</title>
-  <link rel="stylesheet" type="text/css" href=
-  "https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
-  <link rel="stylesheet" type="text/css" href=
-  "https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
 
   <style>
-  body {
-  padding-bottom: 100px;
-  background-color: #000000;
+    body {
+      padding-bottom: 100px;
+      background-color: #000000;
 
-  }
+    }
 
-  .icons .fa, .icons .glyphicon, .icons .pficon {
-  font-size: 14px;
-  margin-right: 5px;
-  text-align: center;
-  width: 14px;
-  }
-  .icons .icon-class {
-  display: inline-block;
-  }
-  .icons li {
-  margin: 0 0 7px;
-  }
+    .icons .fa,
+    .icons .glyphicon,
+    .icons .pficon {
+      font-size: 14px;
+      margin-right: 5px;
+      text-align: center;
+      width: 14px;
+    }
+
+    .icons .icon-class {
+      display: inline-block;
+    }
+
+    .icons li {
+      margin: 0 0 7px;
+    }
   </style>
 </head>
+
 <body>
   <div class="login-pf">
     <div class="login-pf-page">
       <div class="container-fluid">
         <div class="row">
-          <div class=
-          "col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
+          <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-6 col-lg-offset-3">
             <header class="login-pf-page-header">
-              <img class="login-pf-brand" src=
-              "https://images.pexels.com/photos/434650/pexels-photo-434650.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=359&w=640"
-              style="width: 100%;margin-bottom: 20px" alt=" logo">
+              <img class="login-pf-brand" src="https://images.pexels.com/photos/434650/pexels-photo-434650.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=359&w=640" style="width: 100%;margin-bottom: 20px" alt=" logo">
             </header>
             <div class="row">
-              <div class=
-              "col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+              <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
                 <div class="card-pf" style="padding-bottom: 20px">
                   <header class="login-pf-header">
                     <select class="selectpicker">
@@ -66,23 +66,9 @@
 
                   <form>
                     <div class="form-group">
-                      <label class="sr-only" for="exampleInputEmail1">Email
-                      address</label> <input type="email" class=
-                      "form-control input-lg" id="exampleInputEmail1"
-                      placeholder="Email address">
+                      <a href="{{.RedirectURL}}" class="btn btn-primary btn-block btn-lg">Log In using Fenix</a>
+                      <a href="/admin/console" class="btn btn-block btn-lg">Log In as Admin</a>
                     </div>
-
-                    <div class="form-group">
-                      <label class="sr-only" for=
-                      "exampleInputPassword1">Password</label> <input type=
-                      "password" class="form-control input-lg" id=
-                      "exampleInputPassword1" placeholder="Password">
-                    </div>
-
-                    <button type="submit" class=
-                    "btn btn-primary btn-block btn-lg">Log In</button>
-                    <a href="{{.RedirectURL}}" class=
-                    "btn btn-primary btn-block btn-lg">Log In using Fenix</a>
                   </form>
                 </div>
                 <!-- card -->
@@ -101,4 +87,5 @@
     <!-- login-pf-page -->
   </div>
 </body>
+
 </html>
