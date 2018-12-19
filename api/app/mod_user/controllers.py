@@ -10,7 +10,7 @@ mod_user = Blueprint("user", __name__, url_prefix="/user")
 def get_users_in_range(user_id, range):
     sending_user = db.User.find_one({'ist_ID':user_id})
     list_in_range = db.User.find({'cur_pos': {'$near': {'$geometry': {type: 'Point', coordinates: sending_user['cur_pos']}, '$maxDistance': range}},
-    'last_seen': {'$gt': datetime.utcnow() - timedelta(minutes = 10)})
+    'last_seen': {'$gt': datetime.utcnow() - timedelta(minutes = 10)}})
     return list_in_range
 
 def user_building(user_loc):
@@ -43,11 +43,7 @@ def update_loc(user_id):
         db.Activity.update_one({'ist_ID':user_id, 'building_ID': i},{$currentDate:{'departure':True}})
     else:
         db.Activity.insert_one({'ist_ID':user_id, 'building_ID': i, 'arrival': datetime.now(), 'departure': datetime.now()})
-    return jsonify({
-        "success": True
-    }), 200, {
-        "ContentType": "application/json"
-    }
+    return jsonify({'result': 'True'}), 200
 
 
 @mod_user.route("/<user_id>/message", methods=["POST", "GET"])
