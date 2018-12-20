@@ -50,6 +50,7 @@ var users map[string]UserInfo
 var fenixKey = "***REMOVED***"
 var fenixID = "***REMOVED***"
 var fenixRedirect = "http://127.0.0.1:9090/auth"
+var defaultAPIServer = "http://127.0.0.1:5000"
 
 func init() {
 	users = make(map[string]UserInfo)
@@ -101,6 +102,11 @@ func auth(c echo.Context) error {
 	json.NewDecoder(resp.Body).Decode(&userEntry)
 
 	users[userEntry.Username] = userEntry
+
+	_, err = http.Get(defaultAPIServer + "/user/" + userEntry.Username)
+	if err != nil {
+		log.Printf("%s", err)
+	}
 
 	return c.Redirect(http.StatusFound, "/user/"+userEntry.Username)
 }

@@ -65,7 +65,7 @@ def register_user(user_id):
 
 @mod_user.route("/<user_id>/location", methods=["POST"])
 def update_loc(user_id):
-    content = request.get_json()
+    cont = request.get_json()
     lastseen = db.User.find_one({'ist_ID': user_id})['last_seen']
     db.User.update_one({
         'ist_ID': user_id
@@ -86,14 +86,14 @@ def update_loc(user_id):
     if cur_building == last_building:
         db.Activity.update_one({
             'ist_ID': user_id,
-            'building_ID': i
+            'building_ID': cur_building
         }, {'$currentDate': {
             'departure': True
         }})
     else:
         db.Activity.insert_one({
             'ist_ID': user_id,
-            'building_ID': i,
+            'building_ID': cur_building,
             'arrival': datetime.now(),
             'departure': datetime.now()
         })
@@ -103,7 +103,7 @@ def update_loc(user_id):
 @mod_user.route("/<user_id>/message", methods=["POST", "GET"])
 def message_log(user_id):
     if request.method == "POST":
-        content = request.get_json()
+        cont = request.get_json()
         from_building = user_building(
             db.User.find_one({
                 'ist_ID': user_id
@@ -118,7 +118,7 @@ def message_log(user_id):
             'sentstamp':
             datetime.utcnow(),
             'content':
-            content['content'],
+            cont['content'],
             'sent_from':
             from_building,
             'to_istID':

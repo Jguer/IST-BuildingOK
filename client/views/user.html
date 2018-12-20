@@ -78,9 +78,9 @@
           <div class="card-pf-body">
             <form class="form-horizontal">
               <div class="form-group">
-                <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
+                <label class="col-sm-2 control-label" for="textInputDisabled-markup">API Server:</label>
                 <div class="col-sm-10">
-                  <input value="127.0.0.1" id="set-server" type="text">
+                  <input value="http://127.0.0.1:5000" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -221,7 +221,7 @@
     $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
     $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
-    var server = "127.0.0.1";
+    var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
 
     $("#range").TouchSpin({
@@ -245,21 +245,24 @@
     });
 
     $("#submit-server").on("click", function() {
-      server = $('#set-server').text();
+      server = $('#set-server').val();
     });
 
     $("#submit-range").on("click", function() {
       var range = $("#receive-range").val();
       $.ajax({
-        url: server + "/nearby/range",
-        data: JSON.stringify({
-          'range': range
-        }),
+        url: server + "/admin/building",
+        data: JSON.stringify([{
+          'name': name,
+          'lat': lat,
+          'lng': lng
+        }]),
         contentType: 'application/json',
+        crossDomain: true,
         type: 'POST'
       }).done(function(data) {
         if (console && console.log) {
-          console.log("Sample of data:", data.slice(0, 100));
+          console.log(data);
         }
       });
     });
@@ -269,29 +272,29 @@
       var lng = $("#location-lng").val();
       console.log(lat + lng);
       $.ajax({
-        url: server + "/nearby/range",
-        data: JSON.stringify({
-          'lat': lat,
-          'lng': lng
-        }),
+        url: server + "/user/{{.user}}/location",
+        data: JSON.stringify([{
+          'cur_pos': [lat, lng]
+        }]),
         contentType: 'application/json',
+        crossDomain: true,
         type: 'POST'
       }).done(function(data) {
         if (console && console.log) {
-          console.log("Sample of data:", data.slice(0, 100));
+          console.log(data);
         }
       });
     });
 
     $("#submit-text").on("click", function() {
       var range = $("#range").val();
-      var text = $("#message").text();
+      var text = $("#message").val();
 
       $.ajax({
-        url: server + "/nearby/range",
+        url: server + "/user/{{.user}}/message",
         data: JSON.stringify({
-          'range': range,
-          'text': lng
+          'radius': range,
+          'content': text
         }),
         contentType: 'application/json',
         type: 'POST'
