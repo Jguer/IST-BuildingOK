@@ -273,9 +273,9 @@
       console.log(lat + lng);
       $.ajax({
         url: server + "/user/{{.user}}/location",
-        data: JSON.stringify([{
+        data: JSON.stringify({
           'cur_pos': [lat, lng]
-        }]),
+        }),
         contentType: 'application/json',
         crossDomain: true,
         type: 'POST'

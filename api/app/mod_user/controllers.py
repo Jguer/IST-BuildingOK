@@ -31,8 +31,8 @@ def user_building(user_loc):
         'location': {
             '$near': {
                 '$geometry': {
-                    type: 'Point',
-                    coordinates: user_loc
+                    "type": 'Point',
+                    "coordinates": user_loc
                 },
                 '$maxDistance': utils.default_range
             }
@@ -56,8 +56,8 @@ def received_messages(user_id):
     "/<user_id>", methods=["GET"])  # receives an authentication token
 def register_user(user_id):
     db.User.insert_one({
-        'ist_ID': user_id,
-        'sentstamp': datetime.now(),
+        '_id': user_id,
+        'last_seen': datetime.now(),
         'cur_pos': [0.0, 0.0]
     })
     return ("", 200)
@@ -66,12 +66,13 @@ def register_user(user_id):
 @mod_user.route("/<user_id>/location", methods=["POST"])
 def update_loc(user_id):
     cont = request.get_json()
-    lastseen = db.User.find_one({'ist_ID': user_id})['last_seen']
+    lastseen = db.User.find_one({'_id': user_id})['last_seen']
+    print(cont)
     db.User.update_one({
-        'ist_ID': user_id
+        '_id': user_id
     }, {
         '$set': {
-            'cur_pos': cont['cur_pos']
+            'cur_pos': [float(i) for i in cont['cur_pos']]
         },
         '$currentDate': {
             'last_seen': True
@@ -143,8 +144,8 @@ def building_users(user_id):
         'cur_pos': {
             '$near': {
                 '$geometry': {
-                    type: 'Point',
-                    coordinates: from_building['position']
+                    'type': 'Point',
+                    'coordinates': from_building['position']
                 },
                 '$maxDistance': utils.default_range
             }
