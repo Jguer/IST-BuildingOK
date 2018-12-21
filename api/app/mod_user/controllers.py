@@ -67,19 +67,19 @@ def register_user(user_id):
 @mod_user.route("/<user_id>/location", methods=["POST"])
 def update_loc(user_id):
     cont = request.get_json()
+    cur_pos = [float(i) for i in cont['cur_pos']]
     lastseen = db.User.find_one({'_id': user_id})['last_seen']
-    print(cont)
     db.User.update_one({
         '_id': user_id
     }, {
         '$set': {
-            'cur_pos': [float(i) for i in cont['cur_pos']]
+            'cur_pos': cur_pos
         },
         '$currentDate': {
             'last_seen': True
         }
     })
-    cur_building = user_building(cont['cur_pos'])['building_ID']
+    cur_building = user_building(cur_pos)['building_ID']
     list_last_buildings = db.Activity.find({
         'ist_ID': user_id,
         'departure': lastseen
