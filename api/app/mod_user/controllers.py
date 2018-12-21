@@ -13,8 +13,8 @@ def get_users_in_range(user_id, range):
         'cur_pos': {
             '$near': {
                 '$geometry': {
-                    type: 'Point',
-                    coordinates: sending_user['cur_pos']
+                    'type': 'Point',
+                    'coordinates': sending_user['cur_pos']
                 },
                 '$maxDistance': range
             }
@@ -55,11 +55,12 @@ def received_messages(user_id):
 @mod_user.route(
     "/<user_id>", methods=["GET"])  # receives an authentication token
 def register_user(user_id):
-    db.User.insert_one({
-        '_id': user_id,
-        'last_seen': datetime.now(),
-        'cur_pos': [0.0, 0.0]
-    })
+    if db.User.find_one({'_id': user_id}) is None:
+        db.User.insert_one({
+            '_id': user_id,
+            'last_seen': datetime.now(),
+            'cur_pos': [0.0, 0.0]
+        })
     return ("", 200)
 
 
