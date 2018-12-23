@@ -121,7 +121,7 @@ def build_log(build_id):
         }, {
             'sent_to': build_id
         }]
-    })])
+    }))
     if not build_actions:
         return ("", 204)
     return (
