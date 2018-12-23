@@ -27,7 +27,7 @@ def get_users_in_range(user_id, radius):
 
 
 def user_building(user_loc):
-    list_cur_buildings = [ob.__dict__ for ob in db.Building.find({
+    list_cur_buildings = db.Building.find({
         'position': {
             '$near': {
                 '$geometry': {
@@ -37,8 +37,7 @@ def user_building(user_loc):
                 '$maxDistance': utils.default_range
             }
         }
-    })]
-    print(list_cur_buildings)
+    })
     if not list_cur_buildings:
         return None
     return list_cur_buildings[0]
@@ -71,7 +70,6 @@ def register_user(user_id):
 def update_loc(user_id):
     cont = request.get_json()
     cur_pos = [float(i) for i in cont['cur_pos']]
-    print(cur_pos)
     lastseen = db.User.find_one({'_id': user_id})['last_seen']
     db.User.update_one({
         '_id': user_id
@@ -84,18 +82,25 @@ def update_loc(user_id):
         }
     })
     cur_building = user_building(cur_pos)['_id']
-    list_last_buildings = db.Activity.find({
+    list_last_buildings = [ob.__dict__ for ob in db.Activity.find({
         'ist_ID': user_id,
         'departure': lastseen
-    })
-    last_building = list_last_buildings[0].__dict__['_id']
-    if cur_building == last_building:
-        db.Activity.update_one({
-            'ist_ID': user_id,
-            'building_ID': cur_building
-        }, {'$currentDate': {
-            'departure': True
-        }})
+    })]
+    if list_last_buildings:
+        if cur_building == list_last_buildings[0]['building_ID']:
+            db.Activity.update_one({
+                'ist_ID': user_id,
+                'building_ID': cur_building
+            }, {'$currentDate': {
+                'departure': True
+            }})
+        else:
+            db.Activity.insert_one({
+                'ist_ID': user_id,
+                'building_ID': cur_building,
+                'arrival': datetime.now(),
+                'departure': datetime.now()
+            })
     else:
         db.Activity.insert_one({
             'ist_ID': user_id,
