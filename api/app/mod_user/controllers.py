@@ -1,5 +1,4 @@
-import json
-from flask import Blueprint, Flask, request, jsonify
+from flask import Blueprint, request, jsonify
 from datetime import datetime
 from bson.json_util import dumps
 
