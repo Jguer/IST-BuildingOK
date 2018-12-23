@@ -324,7 +324,7 @@
         $("#nearby-list").empty();
         data = JSON.parse(data);
         $.each(data, function (index, value) {
-          $("#nearby-list").append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+          $("#nearby-list").append($('<li>').text(value._id).addClass("list-group-item"));
         });
       });
     });

@@ -27,17 +27,18 @@ def get_users_in_range(user_id, radius):
 
 
 def user_building(user_loc):
-    list_cur_buildings = list(db.Building.find({
-        'position': {
-            '$near': {
-                '$geometry': {
-                    'type': 'Point',
-                    "coordinates": user_loc
-                },
-                '$maxDistance': utils.default_range
+    list_cur_buildings = list(
+        db.Building.find({
+            'position': {
+                '$near': {
+                    '$geometry': {
+                        'type': 'Point',
+                        "coordinates": user_loc
+                    },
+                    '$maxDistance': utils.default_range
+                }
             }
-        }
-    }))
+        }))
     if not list_cur_buildings:
         return None
     return list_cur_buildings[0]
@@ -82,10 +83,12 @@ def update_loc(user_id):
         }
     })
     cur_building = user_building(cur_pos)
-    list_last_buildings = [ob.__dict__ for ob in db.Activity.find({
-        'ist_ID': user_id,
-        'departure': lastseen
-    })]
+    list_last_buildings = [
+        ob.__dict__ for ob in db.Activity.find({
+            'ist_ID': user_id,
+            'departure': lastseen
+        })
+    ]
     if list_last_buildings:
         if cur_building == list_last_buildings[0]['building_ID']:
             db.Activity.update_one({
@@ -125,18 +128,12 @@ def message_log(user_id):
             for x in get_users_in_range(user_id, cont['radius'])
         ]
         new_messages = [{
-            'from_istID':
-            user_id,
-            'sentstamp':
-            datetime.utcnow(),
-            'content':
-            cont['content'],
-            'sent_from':
-            from_building,
-            'to_istID':
-            x.__dict__['_id'],
-            'sent_to':
-            user_building(x.__dict__['cur_pos'])['_id']
+            'from_istID': user_id,
+            'sentstamp': datetime.utcnow(),
+            'content': cont['content'],
+            'sent_from': from_building,
+            'to_istID': x.__dict__['_id'],
+            'sent_to': user_building(x.__dict__['cur_pos'])['_id']
         } for x in list_nearby_users]
         result = db.Message.insert_many(new_messages)
         if (len(result.inserted_ids) == len(new_messages)):
@@ -160,7 +157,7 @@ def building_users(user_id, radius):
                     'type': 'Point',
                     'coordinates': from_building['position']
                 },
-                '$maxDistance': radius
+                '$maxDistance': float(radius)
             }
         }
     })
