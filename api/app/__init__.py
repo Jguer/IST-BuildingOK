@@ -19,8 +19,8 @@ db = client['test-database']
 
 # if not db.Building.list_indexes():
 db.User.create_index([("cur_pos", '2dsphere')])
-db.Building.create_index({'position': '2dsphere'})
-# db.Building.create_index([("position", '2dsphere')], unique=True)
+# db.Building.create_index({'position': '2dsphere'})
+db.Building.create_index([("position", '2dsphere')])
 
 # Sample HTTP error handling
 @app.errorhandler(404)
