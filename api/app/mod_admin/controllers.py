@@ -125,7 +125,7 @@ def build_log(build_id):
     if not build_actions:
         return ("", 204)
     return (
-        jsonify(build_actions),
+        dumps(build_actions),
         200,
         {
             "ContentType": "application/json"

@@ -23,7 +23,7 @@ def get_users_in_range(user_id, radius):
             '$gt': datetime.utcnow() - timedelta(minutes=10)
         }
     })
-    return list_in_range
+    return list(list_in_range)
 
 
 def user_building(user_loc):
@@ -123,22 +123,22 @@ def message_log(user_id):
             db.User.find_one({
                 '_id': user_id
             })['cur_pos'])
-        list_nearby_users = [
-            x.__dict__['_id']
-            for x in get_users_in_range(user_id, cont['radius'])
-        ]
-        new_messages = [{
-            'from_istID': user_id,
-            'sentstamp': datetime.utcnow(),
-            'content': cont['content'],
-            'sent_from': from_building,
-            'to_istID': x.__dict__['_id'],
-            'sent_to': user_building(x.__dict__['cur_pos'])['_id']
-        } for x in list_nearby_users]
-        result = db.Message.insert_many(new_messages)
-        if (len(result.inserted_ids) == len(new_messages)):
-            return jsonify({'result': 'True'}), 200
-        return jsonify({'result': 'False'}), 200
+        list_nearby_users = get_users_in_range(user_id, float(cont['radius']))
+        if list_nearby_users:
+            new_messages = [{
+                'from_istID': user_id,
+                'sentstamp': datetime.utcnow(),
+                'content': cont['content'],
+                'sent_from': from_building,
+                'to_istID': x['_id'],
+                'sent_to': user_building(x['cur_pos'])['_id']
+            } for x in list_nearby_users]
+            result = db.Message.insert_many(new_messages)
+            if (len(result.inserted_ids) == len(new_messages)):
+                return jsonify({'result': 'True'}), 200
+            return jsonify({'result': 'False'}), 200
+        else:
+            return ("", 204)
     return received_messages(user_id)
 
 
