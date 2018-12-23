@@ -140,8 +140,8 @@ def message_log(user_id):
     return received_messages(user_id)
 
 
-@mod_user.route("/<user_id>/nearby", methods=["GET"])
-def building_users(user_id):
+@mod_user.route("/<user_id>/nearby/<radius>", methods=["GET"])
+def building_users(user_id, radius):
     from_building = user_building(
         db.User.find_one({
             'ist_ID': user_id
@@ -155,7 +155,7 @@ def building_users(user_id):
                     'type': 'Point',
                     'coordinates': from_building['position']
                 },
-                '$maxDistance': utils.default_range
+                '$maxDistance': radius
             }
         }
     })

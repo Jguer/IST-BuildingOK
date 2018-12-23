@@ -10,8 +10,10 @@
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"> -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="
+    crossorigin=""></script>
   <style>
     body {
     background-color: #5e5e5e;
@@ -110,13 +112,15 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Latitude:</label>
                 <div class="col-sm-10">
-                  <input id="location-lat" class="form-control" value="Select your location on the map" type="text" disabled="disabled" />
+                  <input id="location-lat" class="form-control" value="Select your location on the map" type="text"
+                    disabled="disabled" />
                 </div>
               </div>
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Longitude:</label>
                 <div class="col-sm-10">
-                  <input id="location-lng" class="form-control" value="Select your location on the map" type="text" disabled="disabled" />
+                  <input id="location-lng" class="form-control" value="Select your location on the map" type="text"
+                    disabled="disabled" />
                 </div>
               </div>
             </form>
@@ -170,10 +174,18 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Range:</label>
                 <div class="col-sm-10">
-                  <input class="bootstrap-touchspin" value="0" id="nearby-range" type="text" name="bootstrap-touchspin-empty">
+                  <input class="bootstrap-touchspin" value="10" id="nearby-range" type="text" name="bootstrap-touchspin-empty">
                 </div>
               </div>
             </form>
+            <ul class="list-group" id="nearby-list"></ul>
+          </div>
+          <div class="card-pf-footer">
+            <button id="ask-nearby">
+              <a class="card-pf-link-with-icon">
+                <span class="fa fa-refresh"></span>Refresh
+              </a>
+            </button>
           </div>
         </div>
       </div>
@@ -182,14 +194,14 @@
           <h2 class="card-pf-title">
             New Messages
           </h2>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="messages-body">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="submit-refresh" class="card-pf-link-with-icon">
+            <button id="submit-refresh">
+              <a class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -225,30 +237,23 @@
     // matchHeight the contents of each .card-pf and then the .card-pf itself
 
     $("#range").TouchSpin({
-      min: 0,
-      max: 20,
+      min: 1,
+      max: 64,
       stepinterval: 1,
       maxboostedstep: 10,
     });
     $("#nearby-range").TouchSpin({
-      min: 0,
-      max: 20,
+      min: 1,
+      max: 64,
       stepinterval: 1,
       maxboostedstep: 10,
     });
 
-    $("#receive-range").TouchSpin({
-      min: 0,
-      max: 20,
-      stepinterval: 1,
-      maxboostedstep: 10,
-    });
-
-    $("#submit-server").on("click", function() {
+    $("#submit-server").on("click", function () {
       server = $('#set-server').val();
     });
 
-    $("#submit-range").on("click", function() {
+    $("#submit-range").on("click", function () {
       var range = $("#receive-range").val();
       $.ajax({
         url: server + "/admin/building",
@@ -260,17 +265,16 @@
         contentType: 'application/json',
         crossDomain: true,
         type: 'POST'
-      }).done(function(data) {
+      }).done(function (data) {
         if (console && console.log) {
           console.log(data);
         }
       });
     });
 
-    $("#submit-location").on("click", function() {
+    $("#submit-location").on("click", function () {
       var lat = $("#location-lat").val();
       var lng = $("#location-lng").val();
-      console.log(lat + lng);
       $.ajax({
         url: server + "/user/{{.user}}/location",
         data: JSON.stringify({
@@ -279,14 +283,14 @@
         contentType: 'application/json',
         crossDomain: true,
         type: 'POST'
-      }).done(function(data) {
+      }).done(function (data) {
         if (console && console.log) {
           console.log(data);
         }
       });
     });
 
-    $("#submit-text").on("click", function() {
+    $("#submit-text").on("click", function () {
       var range = $("#range").val();
       var text = $("#message").val();
 
@@ -298,19 +302,45 @@
         }),
         contentType: 'application/json',
         type: 'POST'
-      }).done(function(data) {
-        if (console && console.log) {
-          console.log("Sample of data:", data.slice(0, 100));
-        }
+      }).done(function (data) {
+        console.log(data);
       });
       console.log(range + text);
     });
 
-    $("#nearby-range").on('change', function() {
-      var range = $(this).val();
+    $("#ask-nearby").on("click", function () {
+      var range = $("#nearby-range").val();
+      $.ajax({
+        url: server + "/user/{{.user}}/nearby/" + range,
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#nearby-list").empty();
+        data = JSON.parse(data);
+        $.each(data, function (index, value) {
+          $("#nearby-list").append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        });
+      });
     });
 
-    $("#submit-refresh").on("click", function() {});
+
+    $("#submit-refresh").on("click", function () {
+      $.ajax({
+        url: server + "/user/{{.user}}/message",
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#messages-body").empty();
+        // data = JSON.parse(data);
+        var list = $("#messages-body").append($('<ul>').addClass("list-group"));
+        console.log(data);
+        // $.each(data, function (index, value) {
+        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        // });
+      });
+    });
   </script>
 </body>
 
