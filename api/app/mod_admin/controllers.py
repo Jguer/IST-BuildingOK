@@ -1,8 +1,10 @@
-import json
+import datetime
+import hashlib
+from bson.json_util import dumps
 
 from flask import Blueprint, jsonify, request
 from app import db
-import datetime
+import app.utils as utils
 
 mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -13,9 +15,7 @@ def check_online_users():
     online = db.User.find({'last_seen': {'$gt': compare}})
     if not online:
         return ("", 204)
-    return jsonify([ob.__dict__ for ob in online]), 200, {
-        "ContentType": "application/json"
-    }
+    return dumps(online), 200, {"ContentType": "application/json"}
 
 
 @mod_admin.route("/building", methods=["GET", "POST"])
@@ -24,13 +24,13 @@ def buildings():
         all_buildings_table = db.Building.find({})
         if not all_buildings_table:
             return ("", 204)
-        return jsonify([ob.__dict__ for ob in all_buildings_table]), 200, {
+        return dumps(all_buildings_table), 200, {
             "ContentType": "application/json"
         }
     elif (request.method == "POST"):
         content = request.json
         to_add = [{
-            'building_ID': i['id'],
+            '_id': hashlib.sha1(i['name'].encode()).hexdigest(),
             'name': i['name'],
             'position': i['position']
         } for i in content]
@@ -48,11 +48,11 @@ def users_inside(build_id):
         'last_seen': {
             '$gt': compare
         },
-        cur_pos: {
+        'cur_pos': {
             '$near': {
                 '$geometry': {
                     type: 'Point',
-                    coordinates: build_pos
+                    'coordinates': build_pos
                 },
                 '$maxDistance': utils.default_range
             }
@@ -68,7 +68,7 @@ def users_inside(build_id):
 @mod_admin.route("/users", methods=["GET"])
 def show_users():
     all_users_table = db.User.find({})
-    return jsonify([ob.__dict__ for ob in all_users_table])
+    return dumps(all_users_table), 200, {"ContentType": "application/json"}
 
 
 @mod_admin.route("/log/user/<usr_id>", methods=["GET"])
@@ -94,12 +94,12 @@ def user_log(usr_id):
 
 @mod_admin.route("/log/building/<build_id>", methods=["GET"])
 def build_log(build_id):
-    build_actions = db.Activity.find({'building_ID': usr_id})
+    build_actions = db.Activity.find({'building_ID': build_id})
     build_actions += db.Message.find({
         '$or': [{
-            'sent_from': usr_id
+            'sent_from': build_id
         }, {
-            'sent_to': usr_id
+            'sent_to': build_id
         }]
     })
     if not build_actions:

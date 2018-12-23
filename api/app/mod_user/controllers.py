@@ -7,7 +7,7 @@ from app import db, utils
 mod_user = Blueprint("user", __name__, url_prefix="/user")
 
 
-def get_users_in_range(user_id, range):
+def get_users_in_range(user_id, radius):
     sending_user = db.User.find_one({'ist_ID': user_id})
     list_in_range = db.User.find({
         'cur_pos': {
@@ -16,11 +16,11 @@ def get_users_in_range(user_id, range):
                     'type': 'Point',
                     'coordinates': sending_user['cur_pos']
                 },
-                '$maxDistance': range
+                '$maxDistance': radius
             }
         },
         'last_seen': {
-            '$gt': datetime.utcnow() - timedelta(minutes=10)
+            '$gt': datetime.utcnow() - datetime.timedelta(minutes=10)
         }
     })
     return list_in_range
