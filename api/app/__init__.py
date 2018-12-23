@@ -21,7 +21,7 @@ if not db.Building.list_indexes():
     db.Building.create_index({ 'position' : '2dsphere' })
 
 if not db.User.list_indexes():
-    db.Building.create_index({ 'cur_pos' : '2dsphere' })
+    db.User.create_index({ 'cur_pos' : '2dsphere' })
 
 
 # Sample HTTP error handling

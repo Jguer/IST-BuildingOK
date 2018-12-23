@@ -42,7 +42,7 @@ def buildings():
         to_add = [{
             '_id': hashlib.sha1(i['name'].encode()).hexdigest(),
             'name': i['name'],
-            'position': i['position']
+            'position': [float(x) for x in i['position']]
         } for i in content]
         result = db.Building.insert_many(to_add)
         if (len(result.inserted_ids) == len(to_add)):
@@ -53,7 +53,7 @@ def buildings():
 @mod_admin.route("/users/<build_id>", methods=["GET"])
 def users_inside(build_id):
     compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
-    build_pos = db.Building.find_one({'_id': build_id}).__dict__['position']
+    build_pos = db.Building.find_one({'_id': build_id})['position']
     online_table = db.User.find({
         'last_seen': {
             '$gt': compare
@@ -61,7 +61,7 @@ def users_inside(build_id):
         'cur_pos': {
             '$near': {
                 '$geometry': {
-                    type: 'Point',
+                    'type': 'Point',
                     'coordinates': build_pos
                 },
                 '$maxDistance': utils.default_range
