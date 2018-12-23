@@ -169,7 +169,7 @@
       </div>
     </div> <!-- row -->
     <div class="row row-cards-pf">
-      <div class="col-md-6">
+      <div class="col-md-4">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Nearby Users
@@ -194,7 +194,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-8">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Messages
@@ -232,6 +232,27 @@
     function onMapClick(e) {
       $("#location-lat").val(e.latlng.lat)
       $("#location-lng").val(e.latlng.lng)
+    }
+
+    function timeConverter(t) {
+      var a = new Date();
+      a.setTime(t)
+      var today = new Date();
+      var yesterday = new Date(Date.now() - 86400000);
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      if (a.setHours(0, 0, 0, 0) == today.setHours(0, 0, 0, 0))
+        return 'Today, ' + hour + ':' + min;
+      else if (a.setHours(0, 0, 0, 0) == yesterday.setHours(0, 0, 0, 0))
+        return 'Yesterday, ' + hour + ':' + min;
+      else if (year == today.getFullYear())
+        return date + ' ' + month + ', ' + hour + ':' + min;
+      else
+        return date + ' ' + month + ' ' + year + ', ' + hour + ':' + min;
     }
 
     map.on('click', onMapClick);
@@ -337,11 +358,42 @@
       }).done(function (data) {
         $("#messages-body").empty();
         data = JSON.parse(data);
-        var list = $("#messages-body").append($('<ul>').addClass("list-group"));
+        console.log(data);
         $.each(data, function (index, value) {
-          $(list).append("<li class='list-group-item form-group'><label class='col-xs-3'>" + value.from_istID + "</label> \
-            <div class='col-xs-9'>" + value.content + "</div> \
-            </li>");
+          $("#messages-body").append('<div class="list-group-item">\
+              <div class="list-group-item-header"> \
+                <div class="list-view-pf-expand"> \
+                  <span class="fa fa-angle-right"></span> \
+                </div> \
+                <div class="list-view-pf-main-info"> \
+                  <div class="list-view-pf-left"> \
+                    <span class="fa fa-envelope list-view-pf-icon-sm"></span> \
+                  </div> \
+                  <div class="list-view-pf-body"> \
+                    <div class="list-view-pf-description"> \
+                      <div class="list-group-item-heading" style="overflow:visible;"> \
+                        '+ value.from_istID + ' \
+                      </div> \
+                      <div class="list-group-item-text"> \
+                        '+ timeConverter(value.sentstamp.$date) + ' \
+                      </div> \
+                    </div> \
+                    <div class="list-view-pf-additional-info"> \
+                      <div class="list-view-pf-additional-info-item"> \
+                        <span class="fa fa-building"></span> \
+                        '+ value.sent_from.name + '\
+                      </div> \
+                    </div> \
+                  </div></div></div> \
+              <div class= "list-group-item-container container-fluid hidden"> \
+                <div class="close"> \
+                  <span class="pficon pficon-close"></span> \
+                </div> \
+                <div class="row"> \
+                  <p class="col-xs-12">'+ value.content + '</p> \
+                </div> \
+              </div> \
+            </div> ');
         });
       });
     });
@@ -353,6 +405,22 @@
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+
+      $("#messages-body").on("click", ".list-group-item-header", function () {
+        if (!$(event.target).is("button, a, input, .fa-ellipsis-v")) {
+          $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
+            .end().parent().toggleClass("list-view-pf-expand-active")
+            .find(".list-group-item-container").toggleClass("hidden");
+        } else {
+        }
+      });
+
+      // click the close button, hide the expand row and remove the active status
+      $("#messages-body").on("click", ".list-group-item-container .close", function () {
+        $(this).parent().addClass("hidden")
+          .parent().removeClass("list-view-pf-expand-active")
+          .find(".fa-angle-right").removeClass("fa-angle-down");
+      });
     });
   </script>
 </body>
