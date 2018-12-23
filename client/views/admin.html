@@ -132,15 +132,9 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Building <span class="caret"></span>
-              </button>
-              <ul id="building-users-select" class="dropdown-building dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">Central</a></li>
-                <li><a href="#">Civil</a></li>
-                <li><a href="#">Nao Civil</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="building-users-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               Users in building
@@ -161,15 +155,9 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Building <span class="caret"></span>
-              </button>
-              <ul id="building-history-select" class="dropdown-building dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">Central</a></li>
-                <li><a href="#">Civil</a></li>
-                <li><a href="#">Nao Civil</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="building-history-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               Building History
@@ -190,15 +178,9 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                User <span class="caret"></span>
-              </button>
-              <ul id="user-history-select" class="dropdown-user dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">j</a></li>
-                <li><a href="#">a</a></li>
-                <li><a href="#">b</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="user-history-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               User History
@@ -235,7 +217,10 @@
         type: 'GET'
       }).done(function (data) {
         data = JSON.parse(data);
-        return data;
+        $("#user-history-select").empty();
+        $.each(data, function (index, obj) {
+          $("#user-history-select").append($('<option>').text(obj._id).attr('value', obj._id));
+        });
       });
     }
 
@@ -247,23 +232,18 @@
         type: 'GET'
       }).done(function (data) {
         data = JSON.parse(data);
-        return data;
-      });
-    }
-
-    function populateSelects() {
-      buildings = getBuildings();
-
-      $.each(buildings, function (index, value) {
-        $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>")
+        $("#building-history-select").empty();
+        $("#building-users-select").empty();
+        $.each(data, function (index, obj) {
+          $("#building-users-select").append($('<option>').text(obj.name).attr('value', obj._id));
+          $("#building-history-select").append($('<option>').text(obj.name).attr('value', obj._id));
+        });
+        $("#building-history-select").selectpicker('refresh');
+        $("#building-users-select").selectpicker('refresh');
       });
     }
 
     map.on('click', onMapClick);
-    $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
     var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
@@ -337,9 +317,9 @@
         type: 'GET'
       }).done(function (data) {
         $("#online-body").empty();
-        data = JSON.parse(data)
+        data = JSON.parse(data);
         $.each(data, function (index, value) {
-          $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>")
+          $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>");
         });
       });
     });
@@ -358,6 +338,13 @@
 
     $(document).ready(function () {
       $('#refresh-online').trigger('click');
+      getBuildings();
+      getUsers();
+
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
   </script>
 </body>
