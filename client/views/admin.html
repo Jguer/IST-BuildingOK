@@ -50,7 +50,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
                 <div class="col-sm-10">
-                  <input value="http://127.0.0.1" id="set-server" type="text">
+                  <input value="http://127.0.0.1:5000" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -103,11 +103,11 @@
                 </div>
               </div>
             </form>
-            <p>
-              <a id="submit-location" class="card-pf-link-with-icon">
+            <button id="submit-location">
+              <a class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Add new building
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -140,14 +140,14 @@
               Users in building
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-user-building">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="refresh-building" class="card-pf-link-with-icon">
+            <button id="ask-user-building">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -163,14 +163,14 @@
               Building History
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-building-history">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="submit-refresh" class="card-pf-link-with-icon">
+            <button id="ask-building-history">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -186,14 +186,14 @@
               User History
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-user-history">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="submit-refresh" class="card-pf-link-with-icon">
+            <button id="ask-user-history">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -270,23 +270,6 @@
       server = $('#set-server').text();
     });
 
-    $("#submit-range").on("click", function () {
-      var range = $("#receive-range").val();
-      $.ajax({
-        url: server + "/nearby/range",
-        data: JSON.stringify({
-          'range': range
-        }),
-        crossDomain: true,
-        contentType: 'application/json',
-        type: 'POST'
-      }).done(function (data) {
-        if (console && console.log) {
-          console.log("Sample of data:", data.slice(0, 100));
-        }
-      });
-    });
-
     $("#submit-location").on("click", function () {
       var name = $("#location-name").val();
       var lat = $("#location-lat").val();
@@ -301,9 +284,25 @@
         crossDomain: true,
         type: 'POST'
       }).done(function (data) {
-        if (console && console.log) {
-          console.log(data);
+        if (data.result == "True") {
+          getBuildings();
         }
+      });
+    });
+
+    $("#ask-user-history").on("click", function () {
+      $.ajax({
+        url: server + "/admin/online",
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#online-body").empty();
+        data = JSON.parse(data);
+        var list = $("#online-body").append($('<ul>').addClass("list-group"));
+        $.each(data, function (index, value) {
+          $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        });
       });
     });
 
@@ -316,23 +315,12 @@
       }).done(function (data) {
         $("#online-body").empty();
         data = JSON.parse(data);
+        var list = $("#online-body").append($('<ul>').addClass("list-group"));
         $.each(data, function (index, value) {
-          $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>");
+          $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
         });
       });
     });
-
-    $("#submit-text").on("click", function () {
-      var range = $("#range").val();
-      var text = $("#message").text();
-      console.log(range + text);
-    });
-
-    $("#nearby-range").on('change', function () {
-      var range = $(this).val();
-    });
-
-    $("#submit-refresh").on("click", function () { });
 
     $(document).ready(function () {
       $('#refresh-online').trigger('click');
