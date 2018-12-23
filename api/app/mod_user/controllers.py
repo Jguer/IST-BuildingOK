@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from datetime import datetime
+from datetime import datetime, timedelta
 from bson.json_util import dumps
 
 from app import db, utils
@@ -20,7 +20,7 @@ def get_users_in_range(user_id, radius):
             }
         },
         'last_seen': {
-            '$gt': datetime.utcnow() - datetime.timedelta(minutes=10)
+            '$gt': datetime.utcnow() - timedelta(minutes=10)
         }
     })
     return list_in_range
