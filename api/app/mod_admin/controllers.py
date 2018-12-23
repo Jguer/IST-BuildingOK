@@ -15,7 +15,13 @@ def check_online_users():
     online = db.User.find({'last_seen': {'$gt': compare}})
     if not online:
         return ("", 204)
-    return dumps(online), 200, {"ContentType": "application/json"}
+    return (
+        jsonify([ob.__dict__ for ob in online]),
+        200,
+        {
+            "ContentType": "application/json"
+        },
+    )
 
 
 @mod_admin.route("/building", methods=["GET", "POST"])
@@ -24,9 +30,13 @@ def buildings():
         all_buildings_table = db.Building.find({})
         if not all_buildings_table:
             return ("", 204)
-        return dumps(all_buildings_table), 200, {
-            "ContentType": "application/json"
-        }
+        return (
+            jsonify([ob.__dict__ for ob in all_buildings_table]),
+            200,
+            {
+                "ContentType": "application/json"
+            },
+        )
     elif (request.method == "POST"):
         content = request.json
         to_add = [{
@@ -43,7 +53,7 @@ def buildings():
 @mod_admin.route("/users/<build_id>", methods=["GET"])
 def users_inside(build_id):
     compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
-    build_pos = db.Building.find_one({'id': build_id})['position']
+    build_pos = db.Building.find_one({'id': build_id}).__dict__['position']
     online_table = db.User.find({
         'last_seen': {
             '$gt': compare
@@ -60,29 +70,41 @@ def users_inside(build_id):
     })
     if not online_table:
         return ("", 204)
-    return dumps(online_table), 200, {"ContentType": "application/json"}
+    return (
+        jsonify([ob.__dict__ for ob in online_table]),
+        200,
+        {
+            "ContentType": "application/json"
+        },
+    )
 
 
 @mod_admin.route("/users", methods=["GET"])
 def show_users():
     all_users_table = db.User.find({})
-    return dumps(all_users_table), 200, {"ContentType": "application/json"}
+    return (
+        jsonify([ob.__dict__ for ob in all_users_table]),
+        200,
+        {
+            "ContentType": "application/json"
+        },
+    )
 
 
 @mod_admin.route("/log/user/<usr_id>", methods=["GET"])
 def user_log(usr_id):
-    user_actions = db.Activity.find({'ist_ID': usr_id})
-    user_actions += db.Message.find({
+    user_actions = [ob.__dict__ for ob in db.Activity.find({'ist_ID': usr_id})]
+    user_actions += [ob.__dict__ for ob in db.Message.find({
         '$or': [{
             'from_istID': usr_id
         }, {
             'to_istID': usr_id
         }]
-    })
+    })]
     if not user_actions:
         return ("", 204)
     return (
-        dumps(user_actions),
+        jsonify(user_actions),
         200,
         {
             "ContentType": "application/json"
@@ -92,18 +114,18 @@ def user_log(usr_id):
 
 @mod_admin.route("/log/building/<build_id>", methods=["GET"])
 def build_log(build_id):
-    build_actions = db.Activity.find({'building_ID': build_id})
-    build_actions += db.Message.find({
+    build_actions = [ob.__dict__ for ob in db.Activity.find({'building_ID': build_id})]
+    build_actions += [ob.__dict__ for ob in db.Message.find({
         '$or': [{
             'sent_from': build_id
         }, {
             'sent_to': build_id
         }]
-    })
+    })]
     if not build_actions:
         return ("", 204)
     return (
-        dumps(build_actions),
+        jsonify(build_actions),
         200,
         {
             "ContentType": "application/json"
