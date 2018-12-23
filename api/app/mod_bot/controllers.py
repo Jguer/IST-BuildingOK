@@ -29,8 +29,7 @@ def send_message(bot_id):
                     'type': 'Point',
                     'coordinates': build_pos
                 },
-                '$maxDistance': range,
-                '$minDistance': 1
+                '$maxDistance': range
             }
         },
         'last_seen': {

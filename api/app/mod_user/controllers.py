@@ -17,7 +17,7 @@ def get_users_in_range(user_id, radius):
                     'coordinates': sending_user['cur_pos']
                 },
                 '$maxDistance': radius,
-                '$minDistance': 1
+                '$minDistance': 2
             }
         },
         'last_seen': {
@@ -159,7 +159,7 @@ def building_users(user_id, radius):
                     'coordinates': from_building['position']
                 },
                 '$maxDistance': float(radius),
-                '$minDistance': 1
+                '$minDistance': 2
             }
         }
     })
