@@ -84,7 +84,7 @@ def user_log(usr_id):
     if not user_actions:
         return ("", 204)
     return (
-        jsonify([ob.__dict__ for ob in user_actions]),
+        dumps(user_actions),
         200,
         {
             "ContentType": "application/json"

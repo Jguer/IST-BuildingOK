@@ -291,18 +291,20 @@
     });
 
     $("#ask-user-history").on("click", function () {
+      var user = $("#user-history-select option:selected").text();
       $.ajax({
-        url: server + "/admin/online",
+        url: server + "/admin/log/user/" + user,
         crossDomain: true,
         contentType: 'application/json',
         type: 'GET'
       }).done(function (data) {
-        $("#online-body").empty();
+        $("#body-user-history").empty();
         data = JSON.parse(data);
-        var list = $("#online-body").append($('<ul>').addClass("list-group"));
-        $.each(data, function (index, value) {
-          $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
-        });
+        var list = $("#body-user-history").append($('<ul>').addClass("list-group"));
+        console.log(data);
+        // $.each(data, function (index, value) {
+        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        // });
       });
     });
 
