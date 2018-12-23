@@ -9,21 +9,22 @@ mod_user = Blueprint("user", __name__, url_prefix="/user")
 
 def get_users_in_range(user_id, radius):
     sending_user = db.User.find_one({'_id': user_id})
-    list_in_range = db.User.find({
+    in_range = db.User.find({
         'cur_pos': {
             '$near': {
                 '$geometry': {
                     'type': 'Point',
                     'coordinates': sending_user['cur_pos']
                 },
-                '$maxDistance': radius
+                '$maxDistance': radius,
+                '$minDistance': 1
             }
         },
         'last_seen': {
             '$gt': datetime.utcnow() - timedelta(minutes=10)
         }
     })
-    return list(list_in_range)
+    return list(in_range)
 
 
 def user_building(user_loc):
@@ -157,7 +158,8 @@ def building_users(user_id, radius):
                     'type': 'Point',
                     'coordinates': from_building['position']
                 },
-                '$maxDistance': float(radius)
+                '$maxDistance': float(radius),
+                '$minDistance': 1
             }
         }
     })

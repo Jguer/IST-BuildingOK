@@ -11,7 +11,7 @@ mod_bot = Blueprint("bot", __name__, url_prefix="/bot")
 def register_bot():
     content = request.get_json()
     db.Bot.insert_one({
-        'bot_ID': content['id'],
+        '_id': content['id'],
         'building_ID': content['building_ID']
     })
     return ("", 200)
@@ -20,22 +20,23 @@ def register_bot():
 @mod_bot.route("/<bot_id>/message", methods=["POST"])
 def send_message(bot_id):
     content = request.get_json()
-    build = db.Bot.find_one({'bot_ID': bot_id})['building_ID']
-    build_pos = db.Building.find_one({'building_ID': build_pos})['position']
-    list_in_range = db.User.find({
+    build = db.Bot.find_one({'_id': bot_id})['building_ID']
+    build_pos = db.Building.find_one({'_id': build_pos})['position']
+    list_in_range = list(db.User.find({
         'cur_pos': {
             '$near': {
                 '$geometry': {
-                    type: 'Point',
-                    coordinates: build_pos
+                    'type': 'Point',
+                    'coordinates': build_pos
                 },
-                '$maxDistance': range
+                '$maxDistance': range,
+                '$minDistance': 1
             }
         },
         'last_seen': {
             '$gt': datetime.utcnow() - timedelta(minutes=10)
         }
-    })
+    }))
     new_messages = [{
         'from_istID':
         bot_id,
@@ -46,9 +47,9 @@ def send_message(bot_id):
         'sent_from':
         build,
         'to_istID':
-        x.__dict__['ist_ID'],
+        x['ist_ID'],
         'sent_to':
-        user_building(x.__dict__['cur_pos'])['building_ID']
+        user_building(x['cur_pos'])['_id']
     } for x in list_in_range]
     result = db.Message.insert_many(new_messages)
     if (len(result.inserted_ids) == len(new_messages)):
