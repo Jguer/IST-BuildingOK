@@ -329,7 +329,6 @@
       }).done(function (data) {
         console.log(data);
       });
-      console.log(range + text);
     });
 
     $("#ask-nearby").on("click", function () {
@@ -348,7 +347,6 @@
       });
     });
 
-
     $("#submit-refresh").on("click", function () {
       $.ajax({
         url: server + "/user/{{.user}}/message",
@@ -358,7 +356,6 @@
       }).done(function (data) {
         $("#messages-body").empty();
         data = JSON.parse(data);
-        console.log(data);
         $.each(data, function (index, value) {
           $("#messages-body").append('<div class="list-group-item">\
               <div class="list-group-item-header"> \
@@ -398,11 +395,11 @@
       });
     });
 
-
     $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
     $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
     $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
     $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+
     $('#ask-nearby').trigger('click');
     $('#submit-refresh').trigger('click');
 
