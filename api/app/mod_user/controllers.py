@@ -1,6 +1,7 @@
 import json
 from flask import Blueprint, Flask, request, jsonify
 from datetime import datetime
+from bson.json_util import dumps
 
 from app import db, utils
 
@@ -27,8 +28,8 @@ def get_users_in_range(user_id, radius):
 
 
 def user_building(user_loc):
-    list_cur_buildings = db.Building.find({
-        'location': {
+    list_cur_buildings = [ob.__dict__ for ob in db.Building.find({
+        'position': {
             '$near': {
                 '$geometry': {
                     "type": 'Point',
@@ -37,16 +38,17 @@ def user_building(user_loc):
                 '$maxDistance': utils.default_range
             }
         }
-    })
+    })]
+    print(list_cur_buildings)
     if not list_cur_buildings:
         return None
-    return list_cur_buildings[0].__dict__
+    return list_cur_buildings[0]
 
 
 def received_messages(user_id):
     user_messages = db.Message.find({'to_istID': user_id})
     return (
-        jsonify([ob.__dict__ for ob in user_messages]),
+        dumps(user_messages),
         200,
         {
             "ContentType": "application/json"
@@ -70,6 +72,7 @@ def register_user(user_id):
 def update_loc(user_id):
     cont = request.get_json()
     cur_pos = [float(i) for i in cont['cur_pos']]
+    print(cur_pos)
     lastseen = db.User.find_one({'_id': user_id})['last_seen']
     db.User.update_one({
         '_id': user_id
@@ -157,7 +160,7 @@ def building_users(user_id):
         }
     })
     return (
-        jsonify([ob.__dict__ for ob in in_building]),
+        dumps(in_building),
         200,
         {
             "ContentType": "application/json"
@@ -171,7 +174,7 @@ def api_nearby_users(user_id, range):
     if not user_table:
         return ("", 204)
     return (
-        jsonify([ob.__dict__ for ob in user_table]),
+        dumps(user_table),
         200,
         {
             "ContentType": "application/json"

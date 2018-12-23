@@ -16,7 +16,7 @@ def check_online_users():
     if not online:
         return ("", 204)
     return (
-        jsonify([ob.__dict__ for ob in online]),
+        dumps(online),
         200,
         {
             "ContentType": "application/json"
@@ -31,7 +31,7 @@ def buildings():
         if not all_buildings_table:
             return ("", 204)
         return (
-            jsonify([ob.__dict__ for ob in all_buildings_table]),
+            dumps(all_buildings_table),
             200,
             {
                 "ContentType": "application/json"
@@ -71,7 +71,7 @@ def users_inside(build_id):
     if not online_table:
         return ("", 204)
     return (
-        jsonify([ob.__dict__ for ob in online_table]),
+        dumps(online_table),
         200,
         {
             "ContentType": "application/json"
@@ -83,7 +83,7 @@ def users_inside(build_id):
 def show_users():
     all_users_table = db.User.find({})
     return (
-        jsonify([ob.__dict__ for ob in all_users_table]),
+        dumps(all_users_table),
         200,
         {
             "ContentType": "application/json"
