@@ -1,5 +1,5 @@
 # Import flask and template operators
-from flask import request, current_app, Flask
+from flask import request, Flask
 
 from pymongo import MongoClient
 
@@ -17,10 +17,9 @@ client = MongoClient(
 
 db = client['test-database']
 
-# if not db.Building.list_indexes():
 db.User.create_index([("cur_pos", '2dsphere')])
-# db.Building.create_index({'position': '2dsphere'})
 db.Building.create_index([("position", '2dsphere')])
+
 
 # Sample HTTP error handling
 @app.errorhandler(404)

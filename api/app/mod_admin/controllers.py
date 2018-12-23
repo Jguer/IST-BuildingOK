@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import hashlib
 from bson.json_util import dumps
 
@@ -11,7 +11,7 @@ mod_admin = Blueprint("admin", __name__, url_prefix="/admin")
 
 @mod_admin.route("/online", methods=["GET"])
 def check_online_users():
-    compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+    compare = datetime.utcnow() - timedelta(minutes=10)
     online = db.User.find({'last_seen': {'$gt': compare}})
     if not online:
         return ("", 204)
@@ -52,7 +52,7 @@ def buildings():
 
 @mod_admin.route("/users/<build_id>", methods=["GET"])
 def users_inside(build_id):
-    compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
+    compare = datetime.utcnow() - timedelta(minutes=10)
     build_pos = db.Building.find_one({'_id': build_id})['position']
     online_table = db.User.find({
         'last_seen': {
