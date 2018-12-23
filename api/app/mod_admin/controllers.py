@@ -93,18 +93,18 @@ def show_users():
 
 @mod_admin.route("/log/user/<usr_id>", methods=["GET"])
 def user_log(usr_id):
-    user_actions = [ob.__dict__ for ob in db.Activity.find({'ist_ID': usr_id})]
-    user_actions += [ob.__dict__ for ob in db.Message.find({
+    user_actions = list(db.Activity.find({'ist_ID': usr_id}))
+    user_actions += list(db.Message.find({
         '$or': [{
             'from_istID': usr_id
         }, {
             'to_istID': usr_id
         }]
-    })]
+    }))
     if not user_actions:
         return ("", 204)
     return (
-        jsonify(user_actions),
+        dumps(user_actions),
         200,
         {
             "ContentType": "application/json"
@@ -114,14 +114,14 @@ def user_log(usr_id):
 
 @mod_admin.route("/log/building/<build_id>", methods=["GET"])
 def build_log(build_id):
-    build_actions = [ob.__dict__ for ob in db.Activity.find({'building_ID': build_id})]
-    build_actions += [ob.__dict__ for ob in db.Message.find({
+    build_actions = list(db.Activity.find({'building_ID': build_id}))
+    build_actions += list(db.Message.find({
         '$or': [{
             'sent_from': build_id
         }, {
             'sent_to': build_id
         }]
-    })]
+    })])
     if not build_actions:
         return ("", 204)
     return (
