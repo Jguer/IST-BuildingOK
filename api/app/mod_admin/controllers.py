@@ -53,7 +53,7 @@ def buildings():
 @mod_admin.route("/users/<build_id>", methods=["GET"])
 def users_inside(build_id):
     compare = datetime.datetime.utcnow() - datetime.timedelta(minutes=10)
-    build_pos = db.Building.find_one({'id': build_id}).__dict__['position']
+    build_pos = db.Building.find_one({'_id': build_id}).__dict__['position']
     online_table = db.User.find({
         'last_seen': {
             '$gt': compare

@@ -9,7 +9,7 @@ mod_user = Blueprint("user", __name__, url_prefix="/user")
 
 
 def get_users_in_range(user_id, radius):
-    sending_user = db.User.find_one({'ist_ID': user_id})
+    sending_user = db.User.find_one({'_id': user_id})
     list_in_range = db.User.find({
         'cur_pos': {
             '$near': {
@@ -84,12 +84,12 @@ def update_loc(user_id):
             'last_seen': True
         }
     })
-    cur_building = user_building(cur_pos)['building_ID']
+    cur_building = user_building(cur_pos)['_id']
     list_last_buildings = db.Activity.find({
         'ist_ID': user_id,
         'departure': lastseen
     })
-    last_building = list_last_buildings[0].__dict__['building_ID']
+    last_building = list_last_buildings[0].__dict__['_id']
     if cur_building == last_building:
         db.Activity.update_one({
             'ist_ID': user_id,
@@ -113,10 +113,10 @@ def message_log(user_id):
         cont = request.get_json()
         from_building = user_building(
             db.User.find_one({
-                'ist_ID': user_id
+                '_id': user_id
             })['cur_pos'])
         list_nearby_users = [
-            x.__dict__['ist_ID']
+            x.__dict__['_id']
             for x in get_users_in_range(user_id, cont['radius'])
         ]
         new_messages = [{
@@ -129,9 +129,9 @@ def message_log(user_id):
             'sent_from':
             from_building,
             'to_istID':
-            x.__dict__['ist_ID'],
+            x.__dict__['_id'],
             'sent_to':
-            user_building(x.__dict__['cur_pos'])['building_ID']
+            user_building(x.__dict__['cur_pos'])['_id']
         } for x in list_nearby_users]
         result = db.Message.insert_many(new_messages)
         if (len(result.inserted_ids) == len(new_messages)):
@@ -144,7 +144,7 @@ def message_log(user_id):
 def building_users(user_id, radius):
     from_building = user_building(
         db.User.find_one({
-            'ist_ID': user_id
+            '_id': user_id
         })['cur_pos'])
     if not from_building:
         return ("", 204)
