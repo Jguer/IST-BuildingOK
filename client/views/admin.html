@@ -50,7 +50,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
                 <div class="col-sm-10">
-                  <input value="http://127.0.0.1" id="set-server" type="text">
+                  <input value="http://127.0.0.1:5000" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -103,11 +103,11 @@
                 </div>
               </div>
             </form>
-            <p>
-              <a id="submit-location" class="card-pf-link-with-icon">
+            <button id="submit-location">
+              <a class="card-pf-link-with-icon">
                 <span class="pficon pficon-add-circle-o"></span>Add new building
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -132,28 +132,22 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Building <span class="caret"></span>
-              </button>
-              <ul id="building-users-select" class="dropdown-building dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">Central</a></li>
-                <li><a href="#">Civil</a></li>
-                <li><a href="#">Nao Civil</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="building-users-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               Users in building
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-user-building">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="refresh-building" class="card-pf-link-with-icon">
+            <button id="ask-user-building">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -161,28 +155,22 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Building <span class="caret"></span>
-              </button>
-              <ul id="building-history-select" class="dropdown-building dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">Central</a></li>
-                <li><a href="#">Civil</a></li>
-                <li><a href="#">Nao Civil</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="building-history-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               Building History
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-building-history">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="submit-refresh" class="card-pf-link-with-icon">
+            <button id="ask-building-history">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -190,28 +178,22 @@
       <div class="col-md-4">
         <div class="card-pf">
           <div class="card-pf-heading">
-            <div class="dropdown card-pf-time-frame-filter">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                User <span class="caret"></span>
-              </button>
-              <ul id="user-history-select" class="dropdown-user dropdown-menu dropdown-menu-right" role="menu">
-                <li class="selected"><a href="#">j</a></li>
-                <li><a href="#">a</a></li>
-                <li><a href="#">b</a></li>
-              </ul>
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="user-history-select">
+              </select>
             </div>
             <h2 class="card-pf-title">
               User History
             </h2>
           </div>
-          <div class="card-pf-body">
+          <div class="card-pf-body" id="body-user-history">
           </div>
           <div class="card-pf-footer">
-            <p>
-              <a id="submit-refresh" class="card-pf-link-with-icon">
+            <button id="ask-user-history">
+              <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
-            </p>
+            </button>
           </div>
         </div>
       </div>
@@ -235,7 +217,10 @@
         type: 'GET'
       }).done(function (data) {
         data = JSON.parse(data);
-        return data;
+        $("#user-history-select").empty();
+        $.each(data, function (index, obj) {
+          $("#user-history-select").append($('<option>').text(obj._id).attr('value', obj._id));
+        });
       });
     }
 
@@ -247,23 +232,16 @@
         type: 'GET'
       }).done(function (data) {
         data = JSON.parse(data);
-        return data;
-      });
-    }
-
-    function populateSelects() {
-      buildings = getBuildings();
-
-      $.each(buildings, function (index, value) {
-        $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>")
+        $("#building-history-select").empty();
+        $("#building-users-select").empty();
+        $.each(data, function (index, obj) {
+          $("#building-users-select").append($('<option>').text(obj.name).attr('value', obj._id));
+          $("#building-history-select").append($('<option>').text(obj.name).attr('value', obj._id));
+        });
       });
     }
 
     map.on('click', onMapClick);
-    $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
     var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
@@ -292,23 +270,6 @@
       server = $('#set-server').text();
     });
 
-    $("#submit-range").on("click", function () {
-      var range = $("#receive-range").val();
-      $.ajax({
-        url: server + "/nearby/range",
-        data: JSON.stringify({
-          'range': range
-        }),
-        crossDomain: true,
-        contentType: 'application/json',
-        type: 'POST'
-      }).done(function (data) {
-        if (console && console.log) {
-          console.log("Sample of data:", data.slice(0, 100));
-        }
-      });
-    });
-
     $("#submit-location").on("click", function () {
       var name = $("#location-name").val();
       var lat = $("#location-lat").val();
@@ -323,9 +284,25 @@
         crossDomain: true,
         type: 'POST'
       }).done(function (data) {
-        if (console && console.log) {
-          console.log(data);
+        if (data.result == "True") {
+          getBuildings();
         }
+      });
+    });
+
+    $("#ask-user-history").on("click", function () {
+      $.ajax({
+        url: server + "/admin/online",
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#online-body").empty();
+        data = JSON.parse(data);
+        var list = $("#online-body").append($('<ul>').addClass("list-group"));
+        $.each(data, function (index, value) {
+          $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        });
       });
     });
 
@@ -337,27 +314,23 @@
         type: 'GET'
       }).done(function (data) {
         $("#online-body").empty();
-        data = JSON.parse(data)
+        data = JSON.parse(data);
+        var list = $("#online-body").append($('<ul>').addClass("list-group"));
         $.each(data, function (index, value) {
-          $("#online-body").append("<p>User: " + value._id + " Location: " + value.cur_pos + "</p>")
+          $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
         });
       });
     });
 
-    $("#submit-text").on("click", function () {
-      var range = $("#range").val();
-      var text = $("#message").text();
-      console.log(range + text);
-    });
-
-    $("#nearby-range").on('change', function () {
-      var range = $(this).val();
-    });
-
-    $("#submit-refresh").on("click", function () { });
-
     $(document).ready(function () {
       $('#refresh-online').trigger('click');
+      getBuildings();
+      getUsers();
+
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
   </script>
 </body>
