@@ -183,7 +183,7 @@
                 </div>
               </div>
             </form>
-            <ul class="list-group" id="nearby-list"></ul>
+            <ul class="list-group" id="nearby-list" style="height:400px;overflow-y: scroll;"></ul>
           </div>
           <div class="card-pf-footer">
             <button class="btn" id="ask-nearby">
@@ -197,9 +197,11 @@
       <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
-            New Messages
+            Messages
           </h2>
-          <div class="card-pf-body" id="messages-body">
+          <div class="card-pf-body" style="overflow-y: scroll; height:400px;">
+            <div id="messages-body" class="list-group list-view-pf list-view-pf-view">
+            </div>
           </div>
           <div class="card-pf-footer">
             <button class="btn" id="submit-refresh">
@@ -233,23 +235,19 @@
     }
 
     map.on('click', onMapClick);
-    $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
-    $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
 
     var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
 
     $("#range").TouchSpin({
       min: 1,
-      max: 64,
+      max: 500,
       stepinterval: 1,
       maxboostedstep: 10,
     });
     $("#nearby-range").TouchSpin({
       min: 1,
-      max: 64,
+      max: 500,
       stepinterval: 1,
       maxboostedstep: 10,
     });
@@ -338,13 +336,23 @@
         type: 'GET'
       }).done(function (data) {
         $("#messages-body").empty();
-        // data = JSON.parse(data);
+        data = JSON.parse(data);
         var list = $("#messages-body").append($('<ul>').addClass("list-group"));
-        console.log(data);
-        // $.each(data, function (index, value) {
-        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
-        // });
+        $.each(data, function (index, value) {
+          $(list).append("<li class='list-group-item form-group'><label class='col-xs-3'>" + value.from_istID + "</label> \
+            <div class='col-xs-9'>" + value.content + "</div> \
+            </li>");
+        });
       });
+    });
+
+
+    $(document).ready(function () {
+
+      $(".row-cards-pf > [class*='col'] > .card-pf .card-pf-title").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
+      $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
     });
   </script>
 </body>
