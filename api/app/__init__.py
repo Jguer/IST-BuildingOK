@@ -17,12 +17,10 @@ client = MongoClient(
 
 db = client['test-database']
 
-if not db.Building.list_indexes():
-    db.Building.create_index({ 'position' : '2dsphere' })
-
-if not db.User.list_indexes():
-    db.User.create_index({ 'cur_pos' : '2dsphere' })
-
+# if not db.Building.list_indexes():
+db.User.create_index([("cur_pos", '2dsphere')])
+db.Building.create_index({'position': '2dsphere'})
+# db.Building.create_index([("position", '2dsphere')], unique=True)
 
 # Sample HTTP error handling
 @app.errorhandler(404)
