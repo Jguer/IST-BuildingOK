@@ -38,6 +38,8 @@ def user_building(user_loc):
             }
         }
     })
+    if not list_cur_buildings:
+        return None
     return list_cur_buildings[0].__dict__
 
 
@@ -141,6 +143,8 @@ def building_users(user_id):
         db.User.find_one({
             'ist_ID': user_id
         })['cur_pos'])
+    if not from_building:
+        return ("", 204)
     in_building = db.User.find({
         'cur_pos': {
             '$near': {
