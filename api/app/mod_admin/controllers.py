@@ -60,9 +60,7 @@ def users_inside(build_id):
     })
     if not online_table:
         return ("", 204)
-    return jsonify([ob.__dict__ for ob in online_table]), 200, {
-        "ContentType": "application/json"
-    }
+    return dumps(online_table), 200, {"ContentType": "application/json"}
 
 
 @mod_admin.route("/users", methods=["GET"])
@@ -105,7 +103,7 @@ def build_log(build_id):
     if not build_actions:
         return ("", 204)
     return (
-        jsonify([ob.__dict__ for ob in build_actions]),
+        dumps(build_actions),
         200,
         {
             "ContentType": "application/json"

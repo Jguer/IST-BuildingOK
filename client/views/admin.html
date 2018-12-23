@@ -290,6 +290,42 @@
       });
     });
 
+    $("#ask-user-building").on("click", function () {
+      var building_id = $("#building-users-select option:selected").val();
+      $.ajax({
+        url: server + "/admin/users/" + building_id,
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#body-user-building").empty();
+        data = JSON.parse(data);
+        var list = $("#body-user-building").append($('<ul>').addClass("list-group"));
+        console.log(data);
+        // $.each(data, function (index, value) {
+        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        // });
+      });
+    });
+
+    $("#ask-building-history").on("click", function () {
+      var building_id = $("#building-history-select option:selected").val();
+      $.ajax({
+        url: server + "/admin/log/building/" + building_id,
+        crossDomain: true,
+        contentType: 'application/json',
+        type: 'GET'
+      }).done(function (data) {
+        $("#body-building-history").empty();
+        data = JSON.parse(data);
+        var list = $("#body-building-history").append($('<ul>').addClass("list-group"));
+        console.log(data);
+        // $.each(data, function (index, value) {
+        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+        // });
+      });
+    });
+
     $("#ask-user-history").on("click", function () {
       var user = $("#user-history-select option:selected").text();
       $.ajax({
