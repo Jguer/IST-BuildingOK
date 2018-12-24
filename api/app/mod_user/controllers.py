@@ -16,15 +16,14 @@ def get_users_in_range(user_id, radius):
                     'type': 'Point',
                     'coordinates': sending_user['cur_pos']
                 },
-                '$maxDistance': radius,
-                '$minDistance': 2
+                '$maxDistance': radius
             }
         },
         'last_seen': {
             '$gt': datetime.utcnow() - timedelta(minutes=10)
         }
     })
-    return list(in_range)
+    return [x for x in list(in_range) if x['_id'] != user_id]
 
 
 def user_building(user_loc):
@@ -158,11 +157,11 @@ def building_users(user_id, radius):
                     'type': 'Point',
                     'coordinates': from_building['position']
                 },
-                '$maxDistance': float(radius),
-                '$minDistance': 2
+                '$maxDistance': float(radius)
             }
         }
     })
+    in_building = [x for x in in_building if x['_id']!=user_id]
     return (
         dumps(in_building),
         200,
