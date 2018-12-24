@@ -40,7 +40,7 @@
 
   <div class="container-fluid container-cards-pf">
     <div class="row row-cards-pf">
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Set Server
@@ -64,7 +64,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-6">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Set Buildings
@@ -111,15 +111,45 @@
           </div>
         </div>
       </div>
+    </div> <!-- row -->
+
+    <div class="row row-cards-pf">
       <div class="col-md-4">
         <div class="card-pf">
           <h2 class="card-pf-title">
             Online Users
           </h2>
-          <div class="card-pf-body" id="online-body">
+          <div class="card-pf-body" id="online-body" style="overflow-y: scroll; min-height:400px;">
+            <span class="fas fa-sad-tear"></span> No online Users
           </div>
           <div class="card-pf-footer">
             <button id="refresh-online">
+              <a class="card-pf-link-with-icon">
+                <span class="fa fa-refresh"></span>Refresh
+              </a>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <div class="btn-group card-pf-time-frame-filter">
+              <select id="user-history-select">
+              </select>
+            </div>
+            <h2 class="card-pf-title">
+              User History
+            </h2>
+          </div>
+          <div class="card-pf-body">
+            <div id="body-user-history" class="list-group list-view-pf list-view-pf-view" style="overflow-y: scroll; max-height:400px;">
+              <span class="fas fa-sad-tear"></span> No data. Try refreshing.
+            </div>
+          </div>
+          <div class="card-pf-footer">
+            <button id="ask-user-history">
               <a class="card-pf-link-with-icon">
                 <span class="fa fa-refresh"></span>Refresh
               </a>
@@ -140,7 +170,7 @@
               Users in building
             </h2>
           </div>
-          <div class="card-pf-body" id="body-user-building">
+          <div class="card-pf-body" id="body-user-building" style="overflow-y: scroll; min-height:400px;">
           </div>
           <div class="card-pf-footer">
             <button id="ask-user-building">
@@ -152,7 +182,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-8">
         <div class="card-pf">
           <div class="card-pf-heading">
             <div class="btn-group card-pf-time-frame-filter">
@@ -163,7 +193,10 @@
               Building History
             </h2>
           </div>
-          <div class="card-pf-body" id="body-building-history">
+          <div class="card-pf-body">
+            <div id="body-building-history" class="list-group list-view-pf list-view-pf-view" style="overflow-y: scroll; max-height:400px;">
+              <span class="fas fa-sad-tear"></span> No data. Try refreshing.
+            </div>
           </div>
           <div class="card-pf-footer">
             <button id="ask-building-history">
@@ -175,28 +208,6 @@
         </div>
       </div>
 
-      <div class="col-md-4">
-        <div class="card-pf">
-          <div class="card-pf-heading">
-            <div class="btn-group card-pf-time-frame-filter">
-              <select id="user-history-select">
-              </select>
-            </div>
-            <h2 class="card-pf-title">
-              User History
-            </h2>
-          </div>
-          <div class="card-pf-body" id="body-user-history">
-          </div>
-          <div class="card-pf-footer">
-            <button id="ask-user-history">
-              <a class="card-pf-link-with-icon">
-                <span class="fa fa-refresh"></span>Refresh
-              </a>
-            </button>
-          </div>
-        </div>
-      </div>
     </div> <!-- row -->
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -241,6 +252,26 @@
       });
     }
 
+    function timeConverter(t) {
+      var a = new Date();
+      a.setTime(t)
+      var today = new Date();
+      var yesterday = new Date(Date.now() - 86400000);
+      var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      if (a.setHours(0, 0, 0, 0) == today.setHours(0, 0, 0, 0))
+        return 'Today, ' + hour + ':' + min;
+      else if (a.setHours(0, 0, 0, 0) == yesterday.setHours(0, 0, 0, 0))
+        return 'Yesterday, ' + hour + ':' + min;
+      else if (year == today.getFullYear())
+        return date + ' ' + month + ', ' + hour + ':' + min;
+      else
+        return date + ' ' + month + ' ' + year + ', ' + hour + ':' + min;
+    }
     map.on('click', onMapClick);
 
     var server = "http://127.0.0.1:5000";
@@ -299,12 +330,16 @@
         type: 'GET'
       }).done(function (data) {
         $("#body-user-building").empty();
-        data = JSON.parse(data);
-        var list = $("#body-user-building").append($('<ul>').addClass("list-group"));
-        console.log(data);
-        // $.each(data, function (index, value) {
-        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
-        // });
+        if (data.length == 0) {
+          $("#body-user-building").text("No Data");
+        } else {
+          $("#body-user-building").empty();
+          data = JSON.parse(data);
+          console.log(data);
+          $.each(data, function (index, value) {
+            $("#body-user-building").append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
+          });
+        }
       });
     });
 
@@ -318,11 +353,65 @@
       }).done(function (data) {
         $("#body-building-history").empty();
         data = JSON.parse(data);
-        var list = $("#body-building-history").append($('<ul>').addClass("list-group"));
-        console.log(data);
-        // $.each(data, function (index, value) {
-        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
-        // });
+        if (data.length == 0) {
+          $("#body-building-history").append('<span class="fas fa-sad-tear"></span> No data. Try refreshing.');
+        } else {
+          console.log(data);
+          $.each(data, function (index, value) {
+            var title;
+            var icon;
+            var time;
+            var extended;
+            var additional;
+            if (value.ist_ID) {
+              title = "Arrival";
+              extended = value.building_ID;
+              time = timeConverter(value.arrival.$date)
+              icon = "fa-building";
+              additional = value.ist_ID;
+            } else {
+              title = "Message";
+              extended = value.content;
+              time = timeConverter(value.sentstamp.$date)
+              icon = "fa-envelope";
+              additional = value.sent_from.name;
+            }
+            $("#body-building-history").append('<div class="list-group-item">\
+              <div class="list-group-item-header"> \
+                <div class="list-view-pf-expand"> \
+                  <span class="fa fa-angle-right"></span> \
+                </div> \
+                <div class="list-view-pf-main-info"> \
+                  <div class="list-view-pf-left"> \
+                    <span class="fa '+ icon + ' list-view-pf-icon-sm"></span> \
+                  </div> \
+                  <div class="list-view-pf-body"> \
+                    <div class="list-view-pf-description"> \
+                      <div class="list-group-item-heading" style="overflow:visible;"> \
+                        '+ title + ' \
+                      </div> \
+                      <div class="list-group-item-text"> \
+                        '+ time + ' \
+                      </div> \
+                    </div> \
+                    <div class="list-view-pf-additional-info"> \
+                      <div class="list-view-pf-additional-info-item"> \
+                        <span class="fa fa-user"></span> \
+                        '+ additional + '\
+                      </div> \
+                    </div> \
+                  </div></div></div> \
+              <div class= "list-group-item-container container-fluid hidden"> \
+                <div class="close"> \
+                  <span class="pficon pficon-close"></span> \
+                </div> \
+                <div class="row"> \
+                  <p class="col-xs-12">'+ extended + '</p> \
+                </div> \
+              </div> \
+            </div> ');
+          });
+        }
       });
     });
 
@@ -336,11 +425,65 @@
       }).done(function (data) {
         $("#body-user-history").empty();
         data = JSON.parse(data);
-        var list = $("#body-user-history").append($('<ul>').addClass("list-group"));
-        console.log(data);
-        // $.each(data, function (index, value) {
-        //   $(list).append($('<li>').text("User: " + value._id + " Location: " + value.cur_pos).addClass("list-group-item"));
-        // });
+        if (data.length == 0) {
+          $("#body-user-history").append('<span class="fas fa-sad-tear"></span> No data. Try refreshing.');
+        } else {
+          console.log(data);
+          $.each(data, function (index, value) {
+            var title;
+            var icon;
+            var time;
+            var extended;
+            var additional;
+            if (value.ist_ID) {
+              title = "Arrival";
+              extended = value.building_ID;
+              time = timeConverter(value.arrival.$date)
+              icon = "fa-building";
+              additional = value.building_ID;
+            } else {
+              title = "Message";
+              extended = value.content;
+              time = timeConverter(value.sentstamp.$date)
+              icon = "fa-envelope";
+              additional = value.sent_from.name;
+            }
+            $("#body-user-history").append('<div class="list-group-item">\
+              <div class="list-group-item-header"> \
+                <div class="list-view-pf-expand"> \
+                  <span class="fa fa-angle-right"></span> \
+                </div> \
+                <div class="list-view-pf-main-info"> \
+                  <div class="list-view-pf-left"> \
+                    <span class="fa '+ icon + ' list-view-pf-icon-sm"></span> \
+                  </div> \
+                  <div class="list-view-pf-body"> \
+                    <div class="list-view-pf-description"> \
+                      <div class="list-group-item-heading" style="overflow:visible;"> \
+                        '+ title + ' \
+                      </div> \
+                      <div class="list-group-item-text"> \
+                        '+ time + ' \
+                      </div> \
+                    </div> \
+                    <div class="list-view-pf-additional-info"> \
+                      <div class="list-view-pf-additional-info-item"> \
+                        <span class="fa fa-building"></span> \
+                        '+ additional + '\
+                      </div> \
+                    </div> \
+                  </div></div></div> \
+              <div class= "list-group-item-container container-fluid hidden"> \
+                <div class="close"> \
+                  <span class="pficon pficon-close"></span> \
+                </div> \
+                <div class="row"> \
+                  <p class="col-xs-12">'+ extended + '</p> \
+                </div> \
+              </div> \
+            </div> ');
+          });
+        }
       });
     });
 
@@ -369,6 +512,39 @@
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-body").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf > .card-pf-footer").matchHeight();
       $(".row-cards-pf > [class*='col'] > .card-pf").matchHeight();
+
+
+      $("#body-building-history").on("click", ".list-group-item-header", function () {
+        if (!$(event.target).is("button, a, input, .fa-ellipsis-v")) {
+          $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
+            .end().parent().toggleClass("list-view-pf-expand-active")
+            .find(".list-group-item-container").toggleClass("hidden");
+        } else {
+        }
+      });
+
+      // click the close button, hide the expand row and remove the active status
+      $("#body-building-history").on("click", ".list-group-item-container .close", function () {
+        $(this).parent().addClass("hidden")
+          .parent().removeClass("list-view-pf-expand-active")
+          .find(".fa-angle-right").removeClass("fa-angle-down");
+      });
+
+      $("#body-user-history").on("click", ".list-group-item-header", function () {
+        if (!$(event.target).is("button, a, input, .fa-ellipsis-v")) {
+          $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
+            .end().parent().toggleClass("list-view-pf-expand-active")
+            .find(".list-group-item-container").toggleClass("hidden");
+        } else {
+        }
+      });
+
+      // click the close button, hide the expand row and remove the active status
+      $("#body-user-history").on("click", ".list-group-item-container .close", function () {
+        $(this).parent().addClass("hidden")
+          .parent().removeClass("list-view-pf-expand-active")
+          .find(".fa-angle-right").removeClass("fa-angle-down");
+      });
     });
   </script>
 </body>
