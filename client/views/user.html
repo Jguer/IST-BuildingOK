@@ -259,6 +259,8 @@
     map.on('click', onMapClick);
 
     var server = "http://127.0.0.1:5000";
+    var registered = false;
+    var currentLocation;
 
     $("#range").TouchSpin({
       min: 1,
@@ -296,22 +298,30 @@
       });
     });
 
-    $("#submit-location").on("click", function () {
-      var lat = $("#location-lat").val();
-      var lng = $("#location-lng").val();
+    function registerPosition() {
       $.ajax({
         url: server + "/user/{{.user}}/location",
-        data: JSON.stringify({
-          'cur_pos': [lat, lng]
-        }),
+        data: currentLocation,
         contentType: 'application/json',
         crossDomain: true,
         type: 'POST'
       }).done(function (data) {
-        if (console && console.log) {
-          console.log(data);
+        if (data.result == "False") {
+          console.log("Failed to register" + currentLocation);
         }
       });
+    }
+
+    $("#submit-location").on("click", function () {
+      var lat = $("#location-lat").val();
+      var lng = $("#location-lng").val();
+      currentLocation = JSON.stringify({ 'cur_pos': [lat, lng] });
+      registerPosition();
+
+      if (registered == false) {
+        registered = true;
+        setInterval(registerPosition, 300000);
+      }
     });
 
     $("#submit-text").on("click", function () {
