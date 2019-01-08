@@ -1,0 +1,7 @@
+---
+applications:
+  - name: "Building Ok Api"
+    random-route: true
+    path: .
+    command: python server.py
+    memory: 128M

@@ -89,7 +89,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">API Server:</label>
                 <div class="col-sm-10">
-                  <input value="http://127.0.0.1:5000" id="set-server" type="text">
+                  <input value="{{.apiServer}}" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -224,6 +224,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"></script>
   <script type="text/javascript">
     var map = L.map('mymap').setView([38.736829, -9.138246], 17);
+    var server = "{{.apiServer}}";
 
     var Hydda_Full = L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -258,7 +259,6 @@
 
     map.on('click', onMapClick);
 
-    var server = "http://127.0.0.1:5000";
     var registered = false;
     var currentLocation;
 

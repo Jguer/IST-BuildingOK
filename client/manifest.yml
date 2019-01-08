@@ -1,0 +1,6 @@
+---
+applications:
+  - name: buildingokgo
+    random-route: true
+    memory: 128M
+    buildpack: go_buildpack

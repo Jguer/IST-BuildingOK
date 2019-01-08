@@ -50,7 +50,7 @@
               <div class="form-group">
                 <label class="col-sm-2 control-label" for="textInputDisabled-markup">Server:</label>
                 <div class="col-sm-10">
-                  <input value="http://127.0.0.1:5000" id="set-server" type="text">
+                  <input value="{{.apiServer}}" id="set-server" type="text">
                 </div>
               </div>
             </form>
@@ -216,6 +216,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-touchspin/4.2.5/jquery.bootstrap-touchspin.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.2/jquery.matchHeight-min.js"></script>
   <script type="text/javascript">
+
+    var server = "{{.apiServer}}";
     function onMapClick(e) {
       $("#location-lat").val(e.latlng.lat)
       $("#location-lng").val(e.latlng.lng)
@@ -274,7 +276,6 @@
     }
     map.on('click', onMapClick);
 
-    var server = "http://127.0.0.1:5000";
     // matchHeight the contents of each .card-pf and then the .card-pf itself
 
     $("#range").TouchSpin({

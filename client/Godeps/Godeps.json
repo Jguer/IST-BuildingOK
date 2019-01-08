@@ -1,0 +1,9 @@
+{
+  "ImportPath": "gohelloworld",
+  "GoVersion": "go1.10",
+  "Deps": [
+    "github.com/foolin/echo-template",
+    "github.com/labstack/echo",
+    "github.com/labstack/echo/middleware"
+  ]
+}

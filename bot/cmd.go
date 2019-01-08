@@ -9,11 +9,12 @@ import (
 	"time"
 )
 
-var ServerURL = "http://127.0.0.1:5000"
+// var ServerURL = "http://127.0.0.1:5000"
+var ServerURL = "***REMOVED***"
 
 type Register struct {
 	BotID    string `json:"id"`
-	Building string `json:"building"`
+	Building string `json:"building_ID"`
 }
 
 type BotMessage struct {
@@ -40,17 +41,17 @@ func (r *Register) register() error {
 		return err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println(body)
+	log.Println(string(body))
 	return nil
 }
 
-func (m *BotMessage) send() error {
+func (m *BotMessage) send(botID string) error {
 	mjson, err := json.Marshal(m)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", ServerURL+"/bot/message",
+	req, err := http.NewRequest("POST", ServerURL+"/bot/"+botID+"/message",
 		bytes.NewBuffer(mjson))
 	if err != nil {
 		return err
@@ -63,7 +64,7 @@ func (m *BotMessage) send() error {
 		return err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println(body)
+	log.Println(ServerURL + "/bot/" + botID + "message :" + string(body))
 	return nil
 }
 
@@ -77,8 +78,7 @@ func main() {
 	for {
 		t := time.Now()
 		msg := BotMessage{Message: "It is now " + t.String()}
-		msg.send()
+		msg.send(reg.BotID)
 		time.Sleep(time.Minute * 1)
-
 	}
 }
