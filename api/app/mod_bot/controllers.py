@@ -2,7 +2,7 @@ import json
 
 from flask import Blueprint, Flask, jsonify, request
 from datetime import datetime, timedelta
-from app import db
+from app import db, utils
 
 mod_bot = Blueprint("bot", __name__, url_prefix="/bot")
 
@@ -21,7 +21,7 @@ def register_bot():
 def send_message(bot_id):
     content = request.get_json()
     build = db.Bot.find_one({'_id': bot_id})['building_ID']
-    build_pos = db.Building.find_one({'_id': build_pos})['position']
+    build_pos = db.Building.find_one({'_id': build})['position']
     list_in_range = list(db.User.find({
         'cur_pos': {
             '$near': {
@@ -29,7 +29,7 @@ def send_message(bot_id):
                     'type': 'Point',
                     'coordinates': build_pos
                 },
-                '$maxDistance': range
+                '$maxDistance': utils.default_range
             }
         },
         'last_seen': {
