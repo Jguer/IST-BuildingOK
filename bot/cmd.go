@@ -10,25 +10,26 @@ import (
 )
 
 // var ServerURL = "http://127.0.0.1:5000"
-var ServerURL = "***REMOVED***"
 
-type Register struct {
+var serverURL = "***REMOVED***"
+
+type register struct {
 	BotID    string `json:"id"`
 	Building string `json:"building_ID"`
 }
 
-type BotMessage struct {
+type botMessage struct {
 	// BotID   string `json:"id"`
-	Message string `json:"message"`
+	Message string `json:"content"`
 }
 
-func (r *Register) register() error {
+func (r *register) register() error {
 	rjson, err := json.Marshal(r)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", ServerURL+"/bot/register",
+	req, err := http.NewRequest("POST", serverURL+"/bot/register",
 		bytes.NewBuffer(rjson))
 	if err != nil {
 		return err
@@ -45,13 +46,13 @@ func (r *Register) register() error {
 	return nil
 }
 
-func (m *BotMessage) send(botID string) error {
+func (m *botMessage) send(botID string) error {
 	mjson, err := json.Marshal(m)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", ServerURL+"/bot/"+botID+"/message",
+	req, err := http.NewRequest("POST", serverURL+"/bot/"+botID+"/message",
 		bytes.NewBuffer(mjson))
 	if err != nil {
 		return err
@@ -64,12 +65,12 @@ func (m *BotMessage) send(botID string) error {
 		return err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println(ServerURL + "/bot/" + botID + "message :" + string(body))
+	log.Println(serverURL + "/bot/" + botID + "message :" + string(body))
 	return nil
 }
 
 func main() {
-	reg := Register{BotID: "exampleBot", Building: "Central"}
+	reg := register{BotID: "newBot", Building: "Quimica"}
 	err := reg.register()
 	if err != nil {
 		log.Fatal(err)
@@ -77,7 +78,7 @@ func main() {
 
 	for {
 		t := time.Now()
-		msg := BotMessage{Message: "It is now " + t.String()}
+		msg := botMessage{Message: "It is now " + t.String()}
 		msg.send(reg.BotID)
 		time.Sleep(time.Minute * 1)
 	}
