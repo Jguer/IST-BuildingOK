@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-var serverURL = "http://127.0.0.1:8000"
+// var serverURL = "http://127.0.0.1:8000"
 
-// var serverURL = "***REMOVED***"
+var serverURL = "***REMOVED***"
 
 type register struct {
 	BotID    string `json:"id"`
