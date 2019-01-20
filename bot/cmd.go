@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-// var ServerURL = "http://127.0.0.1:5000"
+var serverURL = "http://127.0.0.1:8000"
 
-var serverURL = "***REMOVED***"
+// var serverURL = "***REMOVED***"
 
 type register struct {
 	BotID    string `json:"id"`
@@ -47,6 +47,8 @@ func (r *register) register() error {
 }
 
 func (m *botMessage) send(botID string) error {
+	log.Println(serverURL + "/bot/" + botID + "/message message:\n" + m.Message)
+
 	mjson, err := json.Marshal(m)
 	if err != nil {
 		return err
@@ -65,12 +67,12 @@ func (m *botMessage) send(botID string) error {
 		return err
 	}
 	body, err := ioutil.ReadAll(resp.Body)
-	log.Println(serverURL + "/bot/" + botID + "message :" + string(body))
+	log.Println(serverURL + "/bot/" + botID + "/message message:\n" + string(body))
 	return nil
 }
 
 func main() {
-	reg := register{BotID: "newBot", Building: "Quimica"}
+	reg := register{BotID: "fisBot", Building: "Fisica"}
 	err := reg.register()
 	if err != nil {
 		log.Fatal(err)
@@ -78,7 +80,7 @@ func main() {
 
 	for {
 		t := time.Now()
-		msg := botMessage{Message: "It is now " + t.String()}
+		msg := botMessage{Message: "It is now " + t.Format("2006-01-02 15:04:05")}
 		msg.send(reg.BotID)
 		time.Sleep(time.Minute * 1)
 	}

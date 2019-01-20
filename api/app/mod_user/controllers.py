@@ -161,7 +161,7 @@ def building_users(user_id, radius):
             }
         }
     })
-    in_building = [x for x in in_building if x['_id']!=user_id]
+    in_building = [x for x in in_building if x['_id'] != user_id]
     return (
         dumps(in_building),
         200,
