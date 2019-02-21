@@ -52,10 +52,10 @@ type UserInfo struct {
 }
 
 var users map[string]UserInfo
-var fenixKey = "***REMOVED***"
-var fenixID = "***REMOVED***"
-var fenixRedirect = "***REMOVED***"
-var defaultAPIServer = "***REMOVED***"
+var fenixKey = "REMOVED"
+var fenixID = "REMOVED"
+var fenixRedirect = "REMOVED"
+var defaultAPIServer = "REMOVED"
 
 func init() {
 	users = make(map[string]UserInfo)
